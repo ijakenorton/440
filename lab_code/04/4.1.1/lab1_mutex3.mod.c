@@ -17,8 +17,7 @@ BUILD_LTO_INFO;
 MODULE_INFO(vermagic, VERMAGIC_STRING);
 MODULE_INFO(name, KBUILD_MODNAME);
 
-__visible struct module __this_module
-__section(".gnu.linkonce.this_module") = {
+__visible struct module __this_module __section(".gnu.linkonce.this_module") = {
 	.name = KBUILD_MODNAME,
 	.init = init_module,
 #ifdef CONFIG_MODULE_UNLOAD
@@ -31,20 +30,17 @@ __section(".gnu.linkonce.this_module") = {
 MODULE_INFO(retpoline, "Y");
 #endif
 
-
-
-static const struct modversion_info ____versions[]
-__used __section("__versions") = {
-	{ 0xb1ad28e0, "__gnu_mcount_nc" },
-	{ 0x1020ddc, "my_sem" },
-	{ 0x92997ed8, "_printk" },
-	{ 0xca5a7528, "down_interruptible" },
-	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
-	{ 0x581cde4e, "up" },
-	{ 0xa6f3f0f1, "module_layout" },
-};
+static const struct modversion_info ____versions[] __used
+	__section("__versions") = {
+		{ 0xb1ad28e0, "__gnu_mcount_nc" },
+		{ 0x1020ddc, "my_sem" },
+		{ 0x92997ed8, "_printk" },
+		{ 0xca5a7528, "down_interruptible" },
+		{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
+		{ 0x581cde4e, "up" },
+		{ 0xa6f3f0f1, "module_layout" },
+	};
 
 MODULE_INFO(depends, "lab1_mutex1");
-
 
 MODULE_INFO(srcversion, "5824EC7D2E431C82D1C65E1");

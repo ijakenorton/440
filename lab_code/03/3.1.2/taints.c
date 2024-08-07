@@ -52,7 +52,7 @@ static int __init my_init(void)
 	printk(KERN_INFO "%3d MOD:%20s, taints = %d\n", j++, m->name,
 	       m->taints);
 
-	list_for_each_entry(curr, modules, list){
+	list_for_each_entry(curr, modules, list) {
 		printk(KERN_INFO "%3d MOD:%20s, taints = %d\n", j++, m->name,
 		       m->taints);
 	}

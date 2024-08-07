@@ -32,8 +32,8 @@
 #include <linux/module.h>
 #include "lab_one_interrupt.h"
 
-static atomic_t nevents;	/* number of events to deal with */
-static atomic_t catchup;	/* number of 'missed events' */
+static atomic_t nevents; /* number of events to deal with */
+static atomic_t catchup; /* number of 'missed events' */
 
 static void t_fun(unsigned long t_arg)
 {
@@ -45,11 +45,10 @@ static void t_fun(unsigned long t_arg)
 
 	for (;;) {
 		atomic_inc(&counter_bh);
-		printk
-		    (KERN_INFO
-		     "In BH: counter_th = %d, counter_bh = %d, jiffies=%ld, %ld\n",
-		     atomic_read(&counter_th), atomic_read(&counter_bh),
-		     data->jiffies, jiffies);
+		printk(KERN_INFO
+		       "In BH: counter_th = %d, counter_bh = %d, jiffies=%ld, %ld\n",
+		       atomic_read(&counter_th), atomic_read(&counter_bh),
+		       data->jiffies, jiffies);
 		if (atomic_dec_and_test(&nevents))
 			break;
 		atomic_inc(&catchup);
@@ -68,8 +67,8 @@ static irqreturn_t my_interrupt(int irq, void *dev_id)
 	atomic_inc(&nevents);
 	data->jiffies = jiffies;
 	tasklet_schedule(&t_name);
-	mdelay(delay);		/* hoke up a delay to try to cause pileup */
-	return IRQ_NONE;	/* we return IRQ_NONE because we are just observing */
+	mdelay(delay); /* hoke up a delay to try to cause pileup */
+	return IRQ_NONE; /* we return IRQ_NONE because we are just observing */
 }
 
 static int __init my_init(void)

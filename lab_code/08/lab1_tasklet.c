@@ -50,8 +50,7 @@
 
 static struct simp {
 	int len;
-} t_data = {
-.len = 100};
+} t_data = { .len = 100 };
 
 static void t_fun(unsigned long t_arg)
 {
@@ -67,19 +66,16 @@ static void t_fun(unsigned long t_arg)
 
 static DECLARE_TASKLET_OLD(t_name, t_fun);
 
-static ssize_t
-mycdrv_write(struct file *file, const char __user * buf, size_t lbuf,
-	     loff_t * ppos)
+static ssize_t mycdrv_write(struct file *file, const char __user *buf,
+			    size_t lbuf, loff_t *ppos)
 {
 	printk(KERN_INFO " Entering the WRITE function\n");
 	printk(KERN_INFO " my current task pid is %d\n", (int)current->pid);
 	printk(KERN_INFO "about to schedule tasklet, jiffies=%ld\n", jiffies);
 
-
 	/* COMPLETE ME */
 	/* schedule the tasklet here */
 	/* END TRIM */
-
 
 	printk(KERN_INFO " i queued the task, jiffies=%ld\n", jiffies);
 	t_data.len += 100;

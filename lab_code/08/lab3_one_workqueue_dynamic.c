@@ -47,14 +47,14 @@ static void w_fun(struct work_struct *w_arg)
 static irqreturn_t my_interrupt(int irq, void *dev_id)
 {
 	struct my_dat *data =
-	    (struct my_dat *)kmalloc(sizeof(struct my_dat), GFP_ATOMIC);
+		(struct my_dat *)kmalloc(sizeof(struct my_dat), GFP_ATOMIC);
 	data->jiffies = jiffies;
 
 	INIT_WORK(&data->work, w_fun);
 	atomic_inc(&counter_th);
 	schedule_work(&data->work);
-	mdelay(delay);		/* hoke up a delay to try to cause pileup */
-	return IRQ_NONE;	/* we return IRQ_NONE because we are just observing */
+	mdelay(delay); /* hoke up a delay to try to cause pileup */
+	return IRQ_NONE; /* we return IRQ_NONE because we are just observing */
 }
 
 module_init(my_generic_init);

@@ -34,22 +34,26 @@ extern struct semaphore my_sem;
 
 static char *modname = __stringify(KBUILD_BASENAME);
 
-static int __init my_init(void) {
-  printk(KERN_INFO "Trying to load module %s\n", modname);
-  printk(KERN_INFO "\nStarting with semaphore state:  %u\n", my_sem.count);
+static int __init my_init(void)
+{
+	printk(KERN_INFO "Trying to load module %s\n", modname);
+	printk(KERN_INFO "\nStarting with semaphore state:  %u\n",
+	       my_sem.count);
 
-  if (down_interruptible(&my_sem)) {
-    printk(KERN_INFO "semaphore unlocked - wake up \n");
-    return -ERESTARTSYS;
-  }
-  printk(KERN_INFO "\nsemaphore state:  %u\n", my_sem.count);
+	if (down_interruptible(&my_sem)) {
+		printk(KERN_INFO "semaphore unlocked - wake up \n");
+		return -ERESTARTSYS;
+	}
+	printk(KERN_INFO "\nsemaphore state:  %u\n", my_sem.count);
 
-  return 0;
+	return 0;
 }
 
-static void __exit my_exit(void) {
-  up(&my_sem);
-  printk(KERN_INFO "\n%s Semaphore end state:  %u\n", modname, my_sem.count);
+static void __exit my_exit(void)
+{
+	up(&my_sem);
+	printk(KERN_INFO "\n%s Semaphore end state:  %u\n", modname,
+	       my_sem.count);
 }
 
 module_init(my_init);

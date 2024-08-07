@@ -38,9 +38,9 @@ module_param(delay, int, S_IRUGO);
 static atomic_t counter_bh, counter_th;
 
 struct my_dat {
-	unsigned long jiffies;	/* used for timestamp */
-	struct tasklet_struct tsk;	/* used in dynamic tasklet solution */
-	struct work_struct work;	/* used in dynamic workqueue solution */
+	unsigned long jiffies; /* used for timestamp */
+	struct tasklet_struct tsk; /* used in dynamic tasklet solution */
+	struct work_struct work; /* used in dynamic workqueue solution */
 };
 static struct my_dat my_data;
 

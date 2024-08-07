@@ -37,27 +37,25 @@
 
 static LIST_HEAD(my_list);
 
-typedef struct  {
-	struct list_head clist;	
+typedef struct {
+	struct list_head clist;
 	int val;
-}my_entry;
-
+} my_entry;
 
 static int __init my_init(void)
 {
 	my_entry *ce;
 	int k;
 
-	for( k = 0; k < 5; k++){
+	for (k = 0; k < 5; k++) {
 		ce = kmalloc(sizeof(my_entry), GFP_KERNEL);
 		ce->val = k;
-		list_add(&ce->clist, &my_list); 
+		list_add(&ce->clist, &my_list);
 	}
 
-	list_for_each_entry(ce, &my_list, clist){
+	list_for_each_entry(ce, &my_list, clist) {
 		printk(KERN_INFO "(entry): val %d", ce->val);
 	}
-
 
 	/* COMPLETE ME
 	 *
@@ -77,7 +75,6 @@ static void __exit my_exit(void)
 		list_del(&curr->clist);
 		printk(KERN_INFO "(exit): val %d removed\n", curr->val);
 		kfree(curr);
-
 	}
 }
 

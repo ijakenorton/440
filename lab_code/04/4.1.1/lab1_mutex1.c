@@ -30,13 +30,16 @@ DEFINE_MUTEX(my_mutex);
 DEFINE_SEMAPHORE(my_sem, 2);
 EXPORT_SYMBOL(my_sem);
 
-static int __init my_init(void) {
-  printk(KERN_INFO "\nStarting with semaphore state:  %u\n", my_sem.count);
-  return 0;
+static int __init my_init(void)
+{
+	printk(KERN_INFO "\nStarting with semaphore state:  %u\n",
+	       my_sem.count);
+	return 0;
 }
 
-static void __exit my_exit(void) {
-  printk(KERN_INFO "\nEnding with semaphore state:  %u\n", my_sem.count);
+static void __exit my_exit(void)
+{
+	printk(KERN_INFO "\nEnding with semaphore state:  %u\n", my_sem.count);
 }
 
 module_init(my_init);

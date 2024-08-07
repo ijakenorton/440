@@ -28,7 +28,11 @@
 #include <unistd.h>
 #include <errno.h>
 
-#define DEATH(mess) { perror(mess); exit(errno); };
+#define DEATH(mess)           \
+	{                     \
+		perror(mess); \
+		exit(errno);  \
+	};
 
 #define MAXIRQS 256
 #define NB (MAXIRQS * sizeof(int))

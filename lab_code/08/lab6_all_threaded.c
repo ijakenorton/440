@@ -30,7 +30,7 @@
 #include <linux/module.h>
 #include <linux/version.h>
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,30)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 30)
 static int __init my_init(void)
 {
 	printk(KERN_WARNING "Threaded interrupts don't appear until 2.6.30\n");
@@ -56,8 +56,7 @@ static irqreturn_t thread_fun(int irq, void *thr_arg)
 {
 	do {
 		atomic_inc(&bhs[irq]);
-	}
-	while (!atomic_dec_and_test(&nevents[irq]));
+	} while (!atomic_dec_and_test(&nevents[irq]));
 	if (atomic_read(&bhs[irq]) != atomic_read(&interrupts[irq]))
 		printk(KERN_INFO "irq=%5d,th=%6d bh=%6d\n", irq,
 		       atomic_read(&interrupts[irq]), atomic_read(&bhs[irq]));
@@ -69,6 +68,6 @@ module_init(my_generic_init);
 module_exit(my_generic_exit);
 #endif
 
-MODULE_AUTHOR("Jerry Cooperstein");
+	MODULE_AUTHOR("Jerry Cooperstein");
 MODULE_DESCRIPTION("LDD:1.0 s_20/lab6_all_threaded.c");
 MODULE_LICENSE("GPL v2");

@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	/* set up the message */
 	message = malloc(length);
 	memset(message, 'x', length);
-	message[length - 1] = '\0';	/* make sure it is null terminated */
+	message[length - 1] = '\0'; /* make sure it is null terminated */
 
 	/* open the device node */
 
@@ -79,5 +79,4 @@ int main(int argc, char *argv[])
 
 	close(fd);
 	exit(0);
-
 }

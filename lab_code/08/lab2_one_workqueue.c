@@ -62,8 +62,6 @@ static void w_fun(struct work_struct *w_arg)
 	/* COMPLETE ME */
 	/* print: counter_th, counter_bh and data->jiffies here */
 	/* END TRIM */
-
-
 }
 
 static irqreturn_t my_interrupt(int irq, void *dev_id)
@@ -72,14 +70,12 @@ static irqreturn_t my_interrupt(int irq, void *dev_id)
 	atomic_inc(&counter_th);
 	data->jiffies = jiffies;
 
-
 	/* COMPLETE ME */
 	/* schedule the workqueue entry here */
 	/* END TRIM */
 
-
-	mdelay(delay);		/* hoke up a delay to try to cause pileup */
-	return IRQ_NONE;	/* we return IRQ_NONE because we are just observing */
+	mdelay(delay); /* hoke up a delay to try to cause pileup */
+	return IRQ_NONE; /* we return IRQ_NONE because we are just observing */
 }
 
 static int __init my_init(void)
@@ -89,7 +85,6 @@ static int __init my_init(void)
 	/* COMPLETE ME */
 	/* initialize the workqueue here */
 	/* END TRIM */
-
 
 	return my_generic_init();
 }

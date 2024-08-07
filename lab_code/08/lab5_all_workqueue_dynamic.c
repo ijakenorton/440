@@ -42,7 +42,7 @@ static void w_fun(struct work_struct *w_arg)
 static irqreturn_t my_interrupt(int irq, void *dev_id)
 {
 	struct my_dat *data =
-	    (struct my_dat *)kmalloc(sizeof(struct my_dat), GFP_ATOMIC);
+		(struct my_dat *)kmalloc(sizeof(struct my_dat), GFP_ATOMIC);
 
 	INIT_WORK(&data->work, w_fun);
 	data->irq = irq;

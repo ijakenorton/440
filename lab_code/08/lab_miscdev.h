@@ -61,9 +61,8 @@ static inline int mycdrv_generic_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
-static inline ssize_t
-mycdrv_generic_read(struct file *file, char __user * buf, size_t lbuf,
-		    loff_t * ppos)
+static inline ssize_t mycdrv_generic_read(struct file *file, char __user *buf,
+					  size_t lbuf, loff_t *ppos)
 {
 	int nbytes, maxbytes, bytes_to_do;
 	maxbytes = ramdisk_size - *ppos;
@@ -78,9 +77,9 @@ mycdrv_generic_read(struct file *file, char __user * buf, size_t lbuf,
 	return nbytes;
 }
 
-static inline ssize_t
-mycdrv_generic_write(struct file *file, const char __user * buf, size_t lbuf,
-		     loff_t * ppos)
+static inline ssize_t mycdrv_generic_write(struct file *file,
+					   const char __user *buf, size_t lbuf,
+					   loff_t *ppos)
 {
 	int nbytes, maxbytes, bytes_to_do;
 	maxbytes = ramdisk_size - *ppos;
@@ -88,7 +87,7 @@ mycdrv_generic_write(struct file *file, const char __user * buf, size_t lbuf,
 	if (bytes_to_do == 0)
 		printk(KERN_WARNING "Reached end of the device on a write");
 	nbytes =
-	    bytes_to_do - copy_from_user(ramdisk + *ppos, buf, bytes_to_do);
+		bytes_to_do - copy_from_user(ramdisk + *ppos, buf, bytes_to_do);
 	*ppos += nbytes;
 	printk(KERN_INFO "\n Leaving the   WRITE function, nbytes=%d, pos=%d\n",
 	       nbytes, (int)*ppos);
@@ -130,7 +129,8 @@ static int __init my_generic_init(void)
 	ramdisk = kmalloc(ramdisk_size, GFP_KERNEL);
 	if (misc_register(&my_misc_device)) {
 		printk(KERN_WARNING "Culdn't register device misc, "
-		       "%d.\n", my_misc_device.minor);
+				    "%d.\n",
+		       my_misc_device.minor);
 		return -EBUSY;
 	}
 

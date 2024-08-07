@@ -53,51 +53,85 @@
 
 static int param = 100;
 static struct proc_dir_entry *my_proc;
+void *my_seq_start(struct seq_file *s, loff_t *pos)
+{
+	if (*pos >= 1)
+		return NULL;
+	else
+		return &asgn2_dev_count + *pos;
+}
+void *my_seq_next(struct seq_file *s, void *v, loff_t *pos)
+{
+	(*pos)++;
+
+	if (*pos >= 1)
+		return NULL;
+	else
+		return &asgn2_dev_count + *pos;
+}
+void my_seq_stop(struct seq_file *s, void *v)
+{
+	/* There's nothing to do here! */
+}
+
+int my_seq_show(struct seq_file *s, void *v)
+{
+	seq_printf(s, "Pages: %i\nMemory: %i\n", asgn2_device.num_pages,
+		   asgn2_device.data_size);
+	return 0;
+}
 
 static ssize_t my_proc_read(struct file *fd, char *__user u_buffer, size_t len,
-                            loff_t *offset) {
-  /* *eof = 1; */
-  return 1;
-  /* return sprintf(page, "%d\n", param); */
+			    loff_t *offset)
+{
+	/* *eof = 1; */
+	return 1;
+	/* return sprintf(page, "%d\n", param); */
 }
+struct seq_operations my_seq_ops = { .start = my_seq_start,
+				     .next = my_seq_next,
+				     .stop = my_seq_stop,
+				     .show = my_seq_show };
 
 static ssize_t my_proc_write(struct file *fd, const char *__user u_buffer,
-                             size_t len, loff_t *offset) {
-  /* char *str; */
-  /* str = kmalloc((size_t)count, GFP_KERNEL); */
-  /* if (copy_from_user(str, buffer, count)) { */
-  /*   kfree(str); */
-  /*   return -EFAULT; */
-  /* } */
-  /* sscanf(str, "%d", &param); */
-  /* printk(KERN_INFO "param has been set to %d\n", param); */
-  /* kfree(str); */
-  ssize_t count = 0;
-  return count;
+			     size_t len, loff_t *offset)
+{
+	/* char *str; */
+	/* str = kmalloc((size_t)count, GFP_KERNEL); */
+	/* if (copy_from_user(str, buffer, count)) { */
+	/*   kfree(str); */
+	/*   return -EFAULT; */
+	/* } */
+	/* sscanf(str, "%d", &param); */
+	/* printk(KERN_INFO "param has been set to %d\n", param); */
+	/* kfree(str); */
+	ssize_t count = 0;
+	return count;
 }
 
-static int __init my_init(void) {
-  struct proc_ops ops = {
-      .proc_read = my_proc_read,
-      .proc_write = my_proc_write,
-  };
+static int __init my_init(void)
+{
+	struct proc_ops ops = {
+		.proc_read = my_proc_read,
+		.proc_write = my_proc_write,
+	};
 
-  my_proc = proc_create("myproc", 0660, NULL, &ops);
+	my_proc = proc_create("myproc", 0660, NULL, &ops);
 
-  /**
+	/**
    * create a proc entry with global read access and owner write access
    *  if fails, print an error message and return -1
    *
    * register my_proc_read to my_proc->read_proc
    * register my_proc_write to my_proc->write_proc
    */
-  return 0;
+	return 0;
 }
 
-static void __exit my_exit(void) {
-
-  /* COMPLETE ME */
-  /**
+static void __exit my_exit(void)
+{
+	/* COMPLETE ME */
+	/**
    * remove the proc entry
    */
 }

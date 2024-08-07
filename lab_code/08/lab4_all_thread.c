@@ -57,8 +57,8 @@ static int thr_fun(void *thr_arg)
 	do {
 		int irq = data->irq;
 		atomic_set(&cond, 0);
-		wait_event_interruptible(wq, kthread_should_stop()
-					 || atomic_read(&cond) == 1);
+		wait_event_interruptible(wq, kthread_should_stop() ||
+						     atomic_read(&cond) == 1);
 		if (atomic_read(&cond) == 1)
 			atomic_inc(&bhs[irq]);
 	} while (!kthread_should_stop());

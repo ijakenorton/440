@@ -61,8 +61,8 @@ static DECLARE_WAIT_QUEUE_HEAD(wq);
 
 static atomic_t data_ready;
 
-static ssize_t
-mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
+static ssize_t mycdrv_read(struct file *file, char __user *buf, size_t lbuf,
+			   loff_t *ppos)
 {
 	printk(KERN_INFO "process %i (%s) going to sleep\n", current->pid,
 	       current->comm);
@@ -73,17 +73,16 @@ mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
 	return mycdrv_generic_read(file, buf, lbuf, ppos);
 }
 
-static ssize_t
-mycdrv_write(struct file *file, const char __user * buf, size_t lbuf,
-	     loff_t * ppos)
+static ssize_t mycdrv_write(struct file *file, const char __user *buf,
+			    size_t lbuf, loff_t *ppos)
 {
 	int nbytes = mycdrv_generic_write(file, buf, lbuf, ppos);
 	printk(KERN_INFO "process %i (%s) awakening the readers...\n",
 	       current->pid, current->comm);
-        /* COMPLETE ME */
+	/* COMPLETE ME */
 
 	/* atomically set data_ready */
-        /* wake up the process */
+	/* wake up the process */
 	return nbytes;
 }
 

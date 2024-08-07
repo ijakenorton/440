@@ -31,8 +31,8 @@
 int main(int argc, char *argv[])
 {
 	int fd, rc;
-	char *buffer = "TESTING CHAR DRIVER WITH A WRITE", *filename =
-	    "/dev/mycdrv";
+	char *buffer = "TESTING CHAR DRIVER WITH A WRITE",
+	     *filename = "/dev/mycdrv";
 
 	if (argc > 1)
 		filename = argv[1];

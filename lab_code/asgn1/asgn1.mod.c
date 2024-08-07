@@ -17,8 +17,7 @@ BUILD_LTO_INFO;
 MODULE_INFO(vermagic, VERMAGIC_STRING);
 MODULE_INFO(name, KBUILD_MODNAME);
 
-__visible struct module __this_module
-__section(".gnu.linkonce.this_module") = {
+__visible struct module __this_module __section(".gnu.linkonce.this_module") = {
 	.name = KBUILD_MODNAME,
 	.init = init_module,
 #ifdef CONFIG_MODULE_UNLOAD
@@ -31,21 +30,18 @@ __section(".gnu.linkonce.this_module") = {
 MODULE_INFO(retpoline, "Y");
 #endif
 
-
-
-static const struct modversion_info ____versions[]
-__used __section("__versions") = {
-	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
-	{ 0x70dd78f1, "class_destroy" },
-	{ 0x92997ed8, "_printk" },
-	{ 0xa76c78c8, "device_create" },
-	{ 0x58cffff9, "class_create" },
-	{ 0xb1ad28e0, "__gnu_mcount_nc" },
-	{ 0x76646418, "device_destroy" },
-	{ 0xa6f3f0f1, "module_layout" },
-};
+static const struct modversion_info ____versions[] __used
+	__section("__versions") = {
+		{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
+		{ 0x70dd78f1, "class_destroy" },
+		{ 0x92997ed8, "_printk" },
+		{ 0xa76c78c8, "device_create" },
+		{ 0x58cffff9, "class_create" },
+		{ 0xb1ad28e0, "__gnu_mcount_nc" },
+		{ 0x76646418, "device_destroy" },
+		{ 0xa6f3f0f1, "module_layout" },
+	};
 
 MODULE_INFO(depends, "");
-
 
 MODULE_INFO(srcversion, "DA43F18E77C1DC413D0156A");

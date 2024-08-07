@@ -60,12 +60,9 @@ static void t_fun(unsigned long t_arg)
 {
 	atomic_inc(&counter_bh);
 
-
 	/* COMPLETE ME */
 	/* print: counter_th, counter_bh and data->jiffies here */
 	/* END TRIM */
-
-
 }
 
 static DECLARE_TASKLET_OLD(t_name, t_fun);
@@ -81,9 +78,8 @@ static irqreturn_t my_interrupt(int irq, void *dev_id)
 	/* schedule the tasklet here */
 	/* END TRIM */
 
-
-	mdelay(delay);		/* hoke up a delay to try to cause pileup */
-	return IRQ_NONE;	/* we return IRQ_NONE because we are just observing */
+	mdelay(delay); /* hoke up a delay to try to cause pileup */
+	return IRQ_NONE; /* we return IRQ_NONE because we are just observing */
 }
 
 module_init(my_generic_init);

@@ -62,8 +62,8 @@ static irqreturn_t my_interrupt(int irq, void *dev_id)
 	return IRQ_NONE;
 }
 
-static ssize_t
-mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
+static ssize_t mycdrv_read(struct file *file, char __user *buf, size_t lbuf,
+			   loff_t *ppos)
 {
 	char ret_str[32];
 	int nev, nc;
@@ -83,7 +83,7 @@ mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
 	return nc;
 }
 
-static unsigned int mycdrv_poll(struct file *file, poll_table * wait)
+static unsigned int mycdrv_poll(struct file *file, poll_table *wait)
 {
 	poll_wait(file, &wq, wait);
 	printk(KERN_INFO "In poll at jiffies=%ld, nevents=%d\n", jiffies,

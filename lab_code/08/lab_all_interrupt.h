@@ -60,11 +60,10 @@ static void freeup_irqs(void)
 	for (irq = 0; irq < MAXIRQS; irq++) {
 		/* if greater than 0, was able to share */
 		if (atomic_read(&interrupts[irq]) >= 0) {
-			printk
-			    (KERN_INFO
-			     "Freeing IRQ= %4d, which had %10d, %10d events\n",
-			     irq, atomic_read(&interrupts[irq]),
-			     atomic_read(&bhs[irq]));
+			printk(KERN_INFO
+			       "Freeing IRQ= %4d, which had %10d, %10d events\n",
+			       irq, atomic_read(&interrupts[irq]),
+			       atomic_read(&bhs[irq]));
 			synchronize_irq(irq);
 			free_irq(irq, interrupts);
 		}
@@ -74,19 +73,19 @@ static void freeup_irqs(void)
 static void get_irqs(void)
 {
 	int irq;
-	interrupts = (atomic_t *) ramdisk;
-	bhs = (atomic_t *) (ramdisk + NCOPY);
+	interrupts = (atomic_t *)ramdisk;
+	bhs = (atomic_t *)(ramdisk + NCOPY);
 
 	for (irq = 0; irq < MAXIRQS; irq++) {
-		atomic_set(&interrupts[irq], -1);	/* set to -1 as a flag */
+		atomic_set(&interrupts[irq], -1); /* set to -1 as a flag */
 		atomic_set(&bhs[irq], 0);
 		atomic_set(&nevents[irq], 0);
 #ifdef THREADED_IRQ
 		if (!request_threaded_irq(irq, my_interrupt, thread_fun,
 					  IRQF_SHARED, "my_int", interrupts))
 #else
-		if (!request_irq(irq, my_interrupt,
-				 IRQF_SHARED, "my_int", interrupts))
+		if (!request_irq(irq, my_interrupt, IRQF_SHARED, "my_int",
+				 interrupts))
 #endif
 		{
 			atomic_set(&interrupts[irq], 0);
@@ -96,8 +95,8 @@ static void get_irqs(void)
 	}
 }
 
-static ssize_t
-mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
+static ssize_t mycdrv_read(struct file *file, char __user *buf, size_t lbuf,
+			   loff_t *ppos)
 {
 	int nbytes, maxbytes, bytes_to_do;
 	maxbytes = ramdisk_size - *ppos;

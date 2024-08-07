@@ -56,8 +56,8 @@ static irqreturn_t my_interrupt(int irq, void *dev_id)
 
 	atomic_inc(&counter_th);
 	tasklet_schedule(t);
-	mdelay(delay);		/* hoke up a delay to try to cause pileup */
-	return IRQ_NONE;	/* we return IRQ_NONE because we are just observing */
+	mdelay(delay); /* hoke up a delay to try to cause pileup */
+	return IRQ_NONE; /* we return IRQ_NONE because we are just observing */
 }
 
 module_init(my_generic_init);

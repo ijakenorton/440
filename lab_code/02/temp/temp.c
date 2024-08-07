@@ -4,7 +4,7 @@
 /* Author: Zhiyi Huang                                                       */
 /* Version: 0.1                                                               */
 /*----------------------------------------------------------------------------*/
- 
+
 /* This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
@@ -32,60 +32,61 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Zhiyi Huang");
 MODULE_DESCRIPTION("A template module");
 
-
 /* The parameter for testing */
-int major=0;
+int major = 0;
 module_param(major, int, S_IRUGO);
 MODULE_PARM_DESC(major, "device major number");
 
-#define MAX_DSIZE	3071
+#define MAX_DSIZE 3071
 struct my_dev {
-        char data[MAX_DSIZE+1];
-        size_t size;              /* 32-bit will suffice */
-        struct semaphore sem;     /* Mutual exclusion */
-        struct cdev cdev;
+	char data[MAX_DSIZE + 1];
+	size_t size; /* 32-bit will suffice */
+	struct semaphore sem; /* Mutual exclusion */
+	struct cdev cdev;
 	struct class *class;
 	struct device *device;
-} *temp_dev;
+} * temp_dev;
 
-int temp_open (struct inode *inode, struct file *filp)
+int temp_open(struct inode *inode, struct file *filp)
 {
 	return 0;
 }
 
-int temp_release (struct inode *inode, struct file *filp)
+int temp_release(struct inode *inode, struct file *filp)
 {
 	return 0;
 }
 
-ssize_t temp_read (struct file *filp, char __user *buf, size_t count,loff_t *f_pos)
+ssize_t temp_read(struct file *filp, char __user *buf, size_t count,
+		  loff_t *f_pos)
 {
-	int rv=0;
+	int rv = 0;
 
-	if (down_interruptible (&temp_dev->sem))
+	if (down_interruptible(&temp_dev->sem))
 		return -ERESTARTSYS;
 	if (*f_pos > MAX_DSIZE)
 		goto wrap_up;
 	if (*f_pos + count > MAX_DSIZE)
 		count = MAX_DSIZE - *f_pos;
-	if (copy_to_user (buf, temp_dev->data+*f_pos, count)) {
+	if (copy_to_user(buf, temp_dev->data + *f_pos, count)) {
 		rv = -EFAULT;
 		goto wrap_up;
 	}
-	up (&temp_dev->sem);
+	up(&temp_dev->sem);
 	*f_pos += count;
 	return count;
 
 wrap_up:
-	up (&temp_dev->sem);
+	up(&temp_dev->sem);
 	return rv;
 }
 
-ssize_t temp_write (struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
+ssize_t temp_write(struct file *filp, const char __user *buf, size_t count,
+		   loff_t *f_pos)
 {
-	int count1=count, rv=count;
+	int count1 = count, rv = count;
 
-	if (down_interruptible (&temp_dev->sem))
+	if (down_interruptible(&temp_dev->sem))
 		return -ERESTARTSYS;
 
 	if (*f_pos > MAX_DSIZE)
@@ -93,85 +94,87 @@ ssize_t temp_write (struct file *filp, const char __user *buf, size_t count, lof
 	if (*f_pos + count > MAX_DSIZE)
 		count1 = MAX_DSIZE - *f_pos;
 
-	if (copy_from_user (temp_dev->data+*f_pos, buf, count1)) {
+	if (copy_from_user(temp_dev->data + *f_pos, buf, count1)) {
 		rv = -EFAULT;
 		goto wrap_up;
 	}
-	up (&temp_dev->sem);
+	up(&temp_dev->sem);
 	*f_pos += count1;
 	return count;
 
 wrap_up:
-	up (&temp_dev->sem);
+	up(&temp_dev->sem);
 	return rv;
 }
 
-long temp_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
+long temp_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
-
 	return 0;
 }
 
-loff_t temp_llseek (struct file *filp, loff_t off, int whence)
+loff_t temp_llseek(struct file *filp, loff_t off, int whence)
 {
-        long newpos;
+	long newpos;
 
-        switch(whence) {
-        case SEEK_SET:
-                newpos = off;
-                break;
+	switch (whence) {
+	case SEEK_SET:
+		newpos = off;
+		break;
 
-        case SEEK_CUR:
-                newpos = filp->f_pos + off;
-                break;
+	case SEEK_CUR:
+		newpos = filp->f_pos + off;
+		break;
 
-        case SEEK_END:
-                newpos = temp_dev->size + off;
-                break;
+	case SEEK_END:
+		newpos = temp_dev->size + off;
+		break;
 
-        default: /* can't happen */
-                return -EINVAL;
-        }
-        if (newpos<0 || newpos>MAX_DSIZE) return -EINVAL;
-        filp->f_pos = newpos;
-        return newpos;
+	default: /* can't happen */
+		return -EINVAL;
+	}
+	if (newpos < 0 || newpos > MAX_DSIZE)
+		return -EINVAL;
+	filp->f_pos = newpos;
+	return newpos;
 }
 
 struct file_operations temp_fops = {
-        .owner =     THIS_MODULE,
-	.llseek =    temp_llseek,
-        .read =      temp_read,
-        .write =     temp_write,
-        .unlocked_ioctl = temp_ioctl,
-        .open =      temp_open,
-        .release =   temp_release,
+	.owner = THIS_MODULE,
+	.llseek = temp_llseek,
+	.read = temp_read,
+	.write = temp_write,
+	.unlocked_ioctl = temp_ioctl,
+	.open = temp_open,
+	.release = temp_release,
 };
-
 
 /**
  * Initialise the module and create the master device
  */
-int __init temp_init_module(void){
+int __init temp_init_module(void)
+{
 	int rv;
 	dev_t devno = MKDEV(major, 0);
 
-	if(major) {
+	if (major) {
 		rv = register_chrdev_region(devno, 1, "temp");
-		if(rv < 0){
-			printk(KERN_WARNING "Can't use the major number %d; try atomatic allocation...\n", major);
+		if (rv < 0) {
+			printk(KERN_WARNING
+			       "Can't use the major number %d; try atomatic allocation...\n",
+			       major);
 			rv = alloc_chrdev_region(&devno, 0, 1, "temp");
 			major = MAJOR(devno);
 		}
-	}
-	else {
+	} else {
 		rv = alloc_chrdev_region(&devno, 0, 1, "temp");
 		major = MAJOR(devno);
 	}
 
-	if(rv < 0) return rv;
+	if (rv < 0)
+		return rv;
 
 	temp_dev = kmalloc(sizeof(struct my_dev), GFP_KERNEL);
-	if(temp_dev == NULL){
+	if (temp_dev == NULL) {
 		rv = -ENOMEM;
 		unregister_chrdev_region(devno, 1);
 		return rv;
@@ -181,8 +184,8 @@ int __init temp_init_module(void){
 	cdev_init(&temp_dev->cdev, &temp_fops);
 	temp_dev->cdev.owner = THIS_MODULE;
 	temp_dev->size = MAX_DSIZE;
-	sema_init (&temp_dev->sem, 1);
-	rv = cdev_add (&temp_dev->cdev, devno, 1);
+	sema_init(&temp_dev->sem, 1);
+	rv = cdev_add(&temp_dev->cdev, devno, 1);
 	if (rv < 0) {
 		unregister_chrdev_region(devno, 1);
 		kfree(temp_dev);
@@ -191,48 +194,48 @@ int __init temp_init_module(void){
 	}
 
 	temp_dev->class = class_create("temp");
-	if(IS_ERR(temp_dev->class)) {
+	if (IS_ERR(temp_dev->class)) {
 		cdev_del(&temp_dev->cdev);
 		unregister_chrdev_region(devno, 1);
 		kfree(temp_dev);
 		rv = PTR_ERR(temp_dev->class);
-		printk(KERN_WARNING "%s: can't create udev class %d\n", "temp", rv);
+		printk(KERN_WARNING "%s: can't create udev class %d\n", "temp",
+		       rv);
 		return rv;
 	}
 
-	temp_dev->device = device_create(temp_dev->class, NULL,
-					devno, NULL, "temp");
-	if(IS_ERR(temp_dev->device)){
+	temp_dev->device =
+		device_create(temp_dev->class, NULL, devno, NULL, "temp");
+	if (IS_ERR(temp_dev->device)) {
 		class_destroy(temp_dev->class);
 		cdev_del(&temp_dev->cdev);
 		unregister_chrdev_region(devno, 1);
 		kfree(temp_dev);
 		rv = PTR_ERR(temp_dev->device);
-		printk(KERN_WARNING "%s: can't create udev device %d\n", "temp", rv);
+		printk(KERN_WARNING "%s: can't create udev device %d\n", "temp",
+		       rv);
 		return rv;
 	}
 
 	printk(KERN_WARNING "Hello world from Template Module\n");
-	printk(KERN_WARNING "temp device MAJOR is %d, dev addr: %lx\n", major, (unsigned long)temp_dev);
+	printk(KERN_WARNING "temp device MAJOR is %d, dev addr: %lx\n", major,
+	       (unsigned long)temp_dev);
 
-  return 0;
+	return 0;
 }
-
 
 /**
  * Finalise the module
  */
-void __exit temp_exit_module(void){
+void __exit temp_exit_module(void)
+{
 	device_destroy(temp_dev->class, MKDEV(major, 0));
 	class_destroy(temp_dev->class);
-	cdev_del(&temp_dev->cdev); 
+	cdev_del(&temp_dev->cdev);
 	kfree(temp_dev);
 	unregister_chrdev_region(MKDEV(major, 0), 1);
 	printk(KERN_WARNING "Good bye from Template Module\n");
 }
 
-
 module_init(temp_init_module);
 module_exit(temp_exit_module);
-
-

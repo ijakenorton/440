@@ -72,8 +72,8 @@ static int mycdrv_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
-static ssize_t
-mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
+static ssize_t mycdrv_read(struct file *file, char __user *buf, size_t lbuf,
+			   loff_t *ppos)
 {
 	int nbytes, maxbytes, bytes_to_do;
 	maxbytes = ramdisk_size - *ppos;
@@ -87,9 +87,8 @@ mycdrv_read(struct file *file, char __user * buf, size_t lbuf, loff_t * ppos)
 	return nbytes;
 }
 
-static ssize_t
-mycdrv_write(struct file *file, const char __user * buf, size_t lbuf,
-	     loff_t * ppos)
+static ssize_t mycdrv_write(struct file *file, const char __user *buf,
+			    size_t lbuf, loff_t *ppos)
 {
 	int nbytes, maxbytes, bytes_to_do;
 	maxbytes = ramdisk_size - *ppos;
@@ -97,7 +96,7 @@ mycdrv_write(struct file *file, const char __user * buf, size_t lbuf,
 	if (bytes_to_do == 0)
 		printk(KERN_INFO "Reached end of the device on a write");
 	nbytes =
-	    bytes_to_do - copy_from_user(ramdisk + *ppos, buf, bytes_to_do);
+		bytes_to_do - copy_from_user(ramdisk + *ppos, buf, bytes_to_do);
 	*ppos += nbytes;
 	printk(KERN_INFO "\n Leaving the   WRITE function, nbytes=%d, pos=%d\n",
 	       nbytes, (int)*ppos);
@@ -107,39 +106,37 @@ mycdrv_write(struct file *file, const char __user * buf, size_t lbuf,
 static loff_t mycdrv_lseek(struct file *file, loff_t offset, int orig)
 {
 	loff_t new_offset = 0;
-	
-	switch(orig){
-		case SEEK_SET:
-			new_offset = offset;
-			break;
-		case SEEK_CUR:
-			new_offset = file->f_pos + offset;
-			break;
-		case SEEK_END:
-			new_offset = (ramdisk_size - 1) - offset;
-			break;
-		default:
-			return -EINVAL;
+
+	switch (orig) {
+	case SEEK_SET:
+		new_offset = offset;
+		break;
+	case SEEK_CUR:
+		new_offset = file->f_pos + offset;
+		break;
+	case SEEK_END:
+		new_offset = (ramdisk_size - 1) - offset;
+		break;
+	default:
+		return -EINVAL;
 	}
-	if (new_offset > 0 && new_offset < ramdisk_size){
+	if (new_offset > 0 && new_offset < ramdisk_size) {
 		file->f_pos = new_offset;
-	} else return -EINVAL;
+	} else
+		return -EINVAL;
 
 	/* COMPLETE ME */
-
 
 	printk(KERN_INFO "Seeking to pos=%ld\n", (long)new_offset);
 	return new_offset;
 }
 
-static const struct file_operations mycdrv_fops = {
-	.owner = THIS_MODULE,
-	.read = mycdrv_read,
-	.write = mycdrv_write,
-	.open = mycdrv_open,
-	.release = mycdrv_release,
-	.llseek = mycdrv_lseek
-};
+static const struct file_operations mycdrv_fops = { .owner = THIS_MODULE,
+						    .read = mycdrv_read,
+						    .write = mycdrv_write,
+						    .open = mycdrv_open,
+						    .release = mycdrv_release,
+						    .llseek = mycdrv_lseek };
 
 static int __init my_init(void)
 {
