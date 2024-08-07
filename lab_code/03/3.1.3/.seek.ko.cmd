@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/03/3.1.3/seek.ko := ld -r -EL -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm/module.lds -o /home/pi/Documents/440/lab_code/03/3.1.3/seek.ko /home/pi/Documents/440/lab_code/03/3.1.3/seek.o /home/pi/Documents/440/lab_code/03/3.1.3/seek.mod.o;  true

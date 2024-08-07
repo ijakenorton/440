@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/03/3.2.1/wait_event.ko := ld -r -EL -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm/module.lds -o /home/pi/Documents/440/lab_code/03/3.2.1/wait_event.ko /home/pi/Documents/440/lab_code/03/3.2.1/wait_event.o /home/pi/Documents/440/lab_code/03/3.2.1/wait_event.mod.o;  true

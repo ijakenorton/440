@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/03/3.1.1/list.mod := printf '%s\n'   list.o | awk '!x[$$0]++ { print("/home/pi/Documents/440/lab_code/03/3.1.1/"$$0) }' > /home/pi/Documents/440/lab_code/03/3.1.1/list.mod

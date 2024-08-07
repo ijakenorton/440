@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/03/3.2.1/wait_event.mod := printf '%s\n'   wait_event.o | awk '!x[$$0]++ { print("/home/pi/Documents/440/lab_code/03/3.2.1/"$$0) }' > /home/pi/Documents/440/lab_code/03/3.2.1/wait_event.mod

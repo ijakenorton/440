@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/asgn1/asgn1.o := ld -EL -z noexecstack --no-warn-rwx-segments   -r -o /home/pi/Documents/440/lab_code/asgn1/asgn1.o @/home/pi/Documents/440/lab_code/asgn1/asgn1.mod 
