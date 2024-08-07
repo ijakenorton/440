@@ -38,6 +38,7 @@
 @*/
 
 #include "linux/fs.h"
+#include "linux/types.h"
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/proc_fs.h>
@@ -52,36 +53,37 @@
 
 static int param = 100;
 static struct proc_dir_entry *my_proc;
-typedef struct {
-  struct module owner;
-  ssize_t (*read)(char *page, char **start, off_t off, int count, int *eof,
-                  void *data);
-  ssize_t (*write)(struct file *file, const char __user *buffer,
-                   unsigned long count, void *data);
-} my_fops;
 
-static int my_proc_read(char *page, char **start, off_t off, int count,
-                        int *eof, void *data) {
-  *eof = 1;
-  return sprintf(page, "%d\n", param);
+static ssize_t my_proc_read(struct file *fd, char *__user u_buffer, size_t len,
+                            loff_t *offset) {
+  /* *eof = 1; */
+  return 1;
+  /* return sprintf(page, "%d\n", param); */
 }
 
-static int my_proc_write(struct file *file, const char __user *buffer,
-                         unsigned long count, void *data) {
-  char *str;
-  str = kmalloc((size_t)count, GFP_KERNEL);
-  if (copy_from_user(str, buffer, count)) {
-    kfree(str);
-    return -EFAULT;
-  }
-  sscanf(str, "%d", &param);
-  printk(KERN_INFO "param has been set to %d\n", param);
-  kfree(str);
+static ssize_t my_proc_write(struct file *fd, const char *__user u_buffer,
+                             size_t len, loff_t *offset) {
+  /* char *str; */
+  /* str = kmalloc((size_t)count, GFP_KERNEL); */
+  /* if (copy_from_user(str, buffer, count)) { */
+  /*   kfree(str); */
+  /*   return -EFAULT; */
+  /* } */
+  /* sscanf(str, "%d", &param); */
+  /* printk(KERN_INFO "param has been set to %d\n", param); */
+  /* kfree(str); */
+  ssize_t count = 0;
   return count;
 }
 
 static int __init my_init(void) {
-  /* COMPLETE ME */
+  struct proc_ops ops = {
+      .proc_read = my_proc_read,
+      .proc_write = my_proc_write,
+  };
+
+  my_proc = proc_create("myproc", 0660, NULL, &ops);
+
   /**
    * create a proc entry with global read access and owner write access
    *  if fails, print an error message and return -1
@@ -93,6 +95,7 @@ static int __init my_init(void) {
 }
 
 static void __exit my_exit(void) {
+
   /* COMPLETE ME */
   /**
    * remove the proc entry

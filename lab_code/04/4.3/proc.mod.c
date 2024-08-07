@@ -37,10 +37,13 @@ static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
+	{ 0x5f754e5a, "memset" },
+	{ 0x4b49c976, "proc_create" },
+	{ 0xf0fdf6cb, "__stack_chk_fail" },
 	{ 0xa6f3f0f1, "module_layout" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "15DDE0BA285FC9091BB2395");
+MODULE_INFO(srcversion, "BBCD899147378AFD3861250");
