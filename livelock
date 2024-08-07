@@ -1,0 +1,12 @@
+
+Going to suggest some sort of polling? Oh or scheduling ?
+
+How can you not run interupts? They are running on polling then?
+
+So no progress is made due to the secondary processing being at a lower Interupt priority level?
+
+"The queues between steps executed at different IPLs provide some insulation against packet losses
+due to transient overloads, but typically they have fixed length limits."
+
+NIC memory was the reason for this, needed to make sure that incoming packets were dealt with
+quickly or the NIC would run out of memory
