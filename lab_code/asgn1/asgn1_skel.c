@@ -1,8 +1,8 @@
 
 /**
  * File: asgn1.c
- * Date: 13/03/2011
- * Author: Your Name 
+ * Date: 08/08/2024
+ * Author: Jake Norton
  * Version: 0.1
  *
  * This is a module which serves as a virtual ramdisk which disk size is
@@ -22,6 +22,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include "linux/device/class.h"
+#include "linux/err.h"
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
@@ -39,7 +41,7 @@
 #define MYIOC_TYPE 'k'
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("Jake Norton");
 MODULE_DESCRIPTION("COSC440 asgn1");
 
 /**
@@ -52,7 +54,7 @@ typedef struct page_node_rec {
 
 typedef struct asgn1_dev_t {
 	dev_t dev; /* the device */
-	struct cdev *cdev;
+	struct cdev cdev;
 	struct list_head mem_list;
 	int num_pages; /* number of memory pages this module currently holds */
 	size_t data_size; /* total data size in this module */
@@ -193,7 +195,7 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 	int begin_page_no = *f_pos / PAGE_SIZE; /* the first page this finction
 					      should start writing to */
 
-	int curr_page_no = 0; /* the current page number */
+	int curr_page_no; /* the current page number */
 	size_t curr_size_written; /* size written to virtual disk in this round */
 	size_t size_to_be_written; /* size to be read in the current round in 
 				 while loop */
@@ -213,6 +215,17 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
    *       return -EINVAL for invalid user buffer.
    */
 
+	for (curr_page_no = 0; curr_page_no < begin_page_no; curr_page_no++) {
+		if (list_is_last(ptr, &asgn1_device.mem_list)) {
+			curr = kmalloc(sizeof(page_node), GFP_KERNEL);
+			curr->page = alloc_page(GFP_KERNEL);
+			list_add(&curr->list, &asgn1_device.mem_list);
+		}
+		ptr = ptr->next;
+	}
+
+	for (int k = 0; k < 5; k++) {
+	}
 	asgn1_device.data_size =
 		max(asgn1_device.data_size, orig_f_pos + size_written);
 	return size_written;
@@ -317,49 +330,78 @@ static struct proc_ops asgn1_proc_ops = {
 	.proc_release = seq_release,
 };
 
+/* typedef struct asgn1_dev_t { */
+/* 	dev_t dev; /1* the device *1/ */
+/* 	struct cdev cdev; */
+/* 	struct list_head mem_list; */
+/* 	int num_pages; /1* number of memory pages this module currently holds *1/ */
+/* 	size_t data_size; /1* total data size in this module *1/ */
+/* 	atomic_t nprocs; /1* number of processes accessing this device *1/ */
+/* 	atomic_t max_nprocs; /1* max number of processes accessing this device *1/ */
+/* 	struct kmem_cache *cache; /1* cache memory *1/ */
+/* 	struct class *class; /1* the udev class *1/ */
+/* 	struct device *device; /1* the udev device node *1/ */
+/* } asgn1_dev; */
+
 /**
  * Initialise the module and create the master device
  */
 int __init asgn1_init_module(void)
 {
-	int result;
+	int rv;
 
+	if ((rv = alloc_chrdev_region(&asgn1_device.dev, 0, 1, MYDEV_NAME) <
+		  0)) {
+		return rv;
+	}
 	/* COMPLETE ME */
 	/**
-   * set nprocs and max_nprocs of the device
-   *
-   * allocate major number
-   * allocate cdev, and set ops and owner field 
-   * add cdev
-   * initialize the page list
-   * create proc entries
-   */
+           * set nprocs and max_nprocs of the device
+           *
+           * allocate major number
+           * allocate cdev, and set ops and owner field 
+           * add cdev
+           * initialize the page list
+           * create proc entries
+           */
 
-	asgn1_device.class = class_create(MYDEV_NAME);
-	if (IS_ERR(asgn1_device.class)) {
+	if (IS_ERR(asgn1_device.class = class_create(MYDEV_NAME))) {
+		unregister_chrdev_region(asgn1_device.dev, 1);
+		return PTR_ERR(asgn1_device.class);
 	}
 
-	asgn1_device.device = device_create(asgn1_device.class, NULL,
-					    asgn1_device.dev, "%s", MYDEV_NAME);
-	if (IS_ERR(asgn1_device.device)) {
+	if (IS_ERR(asgn1_device.device = device_create(asgn1_device.class, NULL,
+						       asgn1_device.dev, "%s",
+						       MYDEV_NAME))) {
+		printk(KERN_WARNING "%s: can't create device\n", MYDEV_NAME);
+		class_destroy(asgn1_device.class);
+		unregister_chrdev_region(asgn1_device.dev, 1);
+		return PTR_ERR(asgn1_device.device);
+	}
+
+	cdev_init(&asgn1_device.cdev, &asgn1_fops);
+	if ((rv = cdev_add(&asgn1_device.cdev, asgn1_device.dev, 1)) < 0) {
 		printk(KERN_WARNING "%s: can't create udev device\n",
 		       MYDEV_NAME);
-		result = -ENOMEM;
-		goto fail_device;
+		device_destroy(asgn1_device.class, asgn1_device.dev);
+		class_destroy(asgn1_device.class);
+		unregister_chrdev_region(asgn1_device.dev, 1);
 	}
 
 	printk(KERN_WARNING "set up udev entry\n");
 	printk(KERN_WARNING "Hello world from %s\n", MYDEV_NAME);
+
+	INIT_LIST_HEAD(&asgn1_device.mem_list);
+
 	return 0;
 
 	/* cleanup code called when any of the initialization steps fail */
-fail_device:
-	class_destroy(asgn1_device.class);
+	/* fail_device: */
+	/* 	class_destroy(asgn1_device.class); */
+	/* 	unregister_chrdev_region(asgn1_device.dev, 1); */
+	/* 	device_destroy(asgn1_device.class, asgn1_device.dev); */
 
-	/* COMPLETE ME */
-	/* PLEASE PUT YOUR CLEANUP CODE HERE, IN REVERSE ORDER OF ALLOCATION */
-
-	return result;
+	return 0;
 }
 
 /**
@@ -367,8 +409,10 @@ fail_device:
  */
 void __exit asgn1_exit_module(void)
 {
+	cdev_del(&asgn1_device.cdev);
 	device_destroy(asgn1_device.class, asgn1_device.dev);
 	class_destroy(asgn1_device.class);
+	unregister_chrdev_region(asgn1_device.dev, 1);
 	printk(KERN_WARNING "cleaned up udev entry\n");
 
 	/* COMPLETE ME */
