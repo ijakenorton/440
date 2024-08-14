@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/440/lab_code/my_modules/test_allocate_pages.mod := printf '%s\n'   test_allocate_pages.o | awk '!x[$$0]++ { print("/home/pi/Documents/440/lab_code/my_modules/"$$0) }' > /home/pi/Documents/440/lab_code/my_modules/test_allocate_pages.mod
