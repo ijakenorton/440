@@ -26,6 +26,7 @@
 #include "linux/atomic/atomic-instrumented.h"
 #include "linux/device/class.h"
 #include "linux/err.h"
+#include "linux/gfp.h"
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
@@ -79,7 +80,15 @@ int asgn1_dev_count = 1; /* number of devices */
 void free_memory_pages(void)
 {
 	page_node *curr;
-
+	page_node *tmp;
+	list_for_each_entry_safe(curr, tmp, &asgn1_device.mem_list, list) {
+		if (curr->page) {
+			__free_page(curr->page);
+		}
+		list_del(&curr->list);
+	}
+	asgn1_device.data_size = 0;
+	asgn1_device.num_pages = 0;
 	/* COMPLETE ME */
 	/**
    * Loop through the entire page list {
@@ -247,6 +256,12 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		size_written += size_to_be_written;
 		*f_pos += size_to_be_written;
 		begin_offset = *f_pos % PAGE_SIZE;
+		if (size_written < count) {
+			curr = kmalloc(sizeof(page_node), GFP_KERNEL);
+			curr->page = alloc_page(GFP_KERNEL);
+			list_add(&curr->list, &asgn1_device.mem_list);
+			asgn1_device.num_pages++;
+		}
 	}
 	/* for (curr_page_no = 0; curr_page_no < begin_page_no; curr_page_no++) { */
 	/* 	if (list_is_last(ptr, &asgn1_device.mem_list)) { */
@@ -444,6 +459,7 @@ int __init asgn1_init_module(void)
  */
 void __exit asgn1_exit_module(void)
 {
+	free_memory_pages();
 	cdev_del(&asgn1_device.cdev);
 	device_destroy(asgn1_device.class, asgn1_device.dev);
 	class_destroy(asgn1_device.class);
