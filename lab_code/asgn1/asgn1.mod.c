@@ -42,10 +42,17 @@ __used __section("__versions") = {
 	{ 0x89b05fd3, "cdev_add" },
 	{ 0xa76c78c8, "device_create" },
 	{ 0x58cffff9, "class_create" },
+	{ 0x5f754e5a, "memset" },
+	{ 0x48c78dde, "__alloc_pages" },
 	{ 0x6091b333, "unregister_chrdev_region" },
+	{ 0xae353d77, "arm_copy_from_user" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
+	{ 0x987c11c7, "__pv_phys_pfn_offset" },
 	{ 0x76646418, "device_destroy" },
+	{ 0xbddad34d, "kmalloc_trace" },
+	{ 0xab528595, "mem_map" },
 	{ 0x8e1ca6d9, "cdev_init" },
+	{ 0xbcc79e67, "kmalloc_caches" },
 	{ 0x34bebc18, "cdev_del" },
 	{ 0xa6f3f0f1, "module_layout" },
 };
@@ -53,4 +60,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "BC815935A32F6319FF7A4C6");
+MODULE_INFO(srcversion, "21898D2447EE4C1EEE5D860");

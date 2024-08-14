@@ -29,13 +29,20 @@
  @*/
 
 #include <linux/module.h>
+#include "linux/gfp_types.h"
+#include "linux/moduleparam.h"
+#include "linux/printk.h"
 #include <asm/atomic.h>
 #include <linux/errno.h>
 #include <linux/slab.h>
 #include <linux/init.h>
 #include <linux/list.h>
+#include <linux/module.h>
 
 static LIST_HEAD(my_list);
+static struct kmem_cache *my_cache;
+static int size = PAGE_SIZE;
+module_param(size, int, S_IRUGO);
 
 typedef struct {
 	struct list_head clist;
@@ -44,25 +51,26 @@ typedef struct {
 
 static int __init my_init(void)
 {
+	if (!(my_cache = kmem_cache_create("mycache", size, 0,
+					   SLAB_HWCACHE_ALIGN, NULL))) {
+		printk(KERN_ERR "kmem_cache_create failed\n");
+		return -ENOMEM;
+	}
+	printk(KERN_INFO "successfully created cache");
 	my_entry *ce;
 	int k;
 
 	for (k = 0; k < 5; k++) {
-		ce = kmalloc(sizeof(my_entry), GFP_KERNEL);
+		ce = kmem_cache_alloc(my_cache, GFP_ATOMIC);
+		/* ce = kmalloc(sizeof(my_entry), GFP_KERNEL); */
 		ce->val = k;
 		list_add(&ce->clist, &my_list);
 	}
+	printk(KERN_INFO "cache size %u", kmem_cache_size(my_cache));
 
 	list_for_each_entry(ce, &my_list, clist) {
 		printk(KERN_INFO "(entry): val %d", ce->val);
 	}
-
-	/* COMPLETE ME
-	 *
-	 * add five nodes to my_list, and set the val of each node
-	 *
-	 * traverse list ce and print value of each node
-	 */
 
 	return 0;
 }
@@ -74,8 +82,9 @@ static void __exit my_exit(void)
 	list_for_each_entry_safe(curr, tmp, &my_list, clist) {
 		list_del(&curr->clist);
 		printk(KERN_INFO "(exit): val %d removed\n", curr->val);
-		kfree(curr);
+		kmem_cache_free(my_cache, curr);
 	}
+	kmem_cache_destroy(my_cache);
 }
 
 module_init(my_init);

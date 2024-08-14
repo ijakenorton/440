@@ -25,35 +25,43 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
     $(wildcard include/config/ARCH_USE_BUILTIN_BSWAP) \
     $(wildcard include/config/SHADOW_CALL_STACK) \
     $(wildcard include/config/KCOV) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/device/class.h \
-    $(wildcard include/config/ACPI) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kobject.h \
-    $(wildcard include/config/UEVENT_HELPER) \
-    $(wildcard include/config/DEBUG_KOBJECT_RELEASE) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/types.h \
-    $(wildcard include/config/HAVE_UID16) \
-    $(wildcard include/config/UID16) \
-    $(wildcard include/config/ARCH_DMA_ADDR_T_64BIT) \
-    $(wildcard include/config/PHYS_ADDR_T_64BIT) \
-    $(wildcard include/config/64BIT) \
-    $(wildcard include/config/ARCH_32BIT_USTAT_F_TINODE) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/page.h \
+    $(wildcard include/config/MMU) \
+    $(wildcard include/config/CPU_COPY_V4WT) \
+    $(wildcard include/config/CPU_COPY_V4WB) \
+    $(wildcard include/config/CPU_COPY_FEROCEON) \
+    $(wildcard include/config/CPU_COPY_FA) \
+    $(wildcard include/config/CPU_SA1100) \
+    $(wildcard include/config/CPU_XSCALE) \
+    $(wildcard include/config/CPU_XSC3) \
+    $(wildcard include/config/CPU_COPY_V6) \
+    $(wildcard include/config/KUSER_HELPERS) \
+    $(wildcard include/config/ARM_LPAE) \
+    $(wildcard include/config/VMAP_STACK) \
+    $(wildcard include/config/HAVE_ARCH_PFN_VALID) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/glue.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/pgtable-2level-types.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/uapi/asm/types.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/int-ll64.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/int-ll64.h \
   arch/arm/include/generated/uapi/asm/bitsperlong.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/bitsperlong.h \
+    $(wildcard include/config/64BIT) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/bitsperlong.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/posix_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stddef.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/stddef.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/uapi/asm/posix_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/posix_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/list.h \
-    $(wildcard include/config/LIST_HARDENED) \
-    $(wildcard include/config/DEBUG_LIST) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/container_of.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/build_bug.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/memory.h \
+    $(wildcard include/config/NEED_MACH_MEMORY_H) \
+    $(wildcard include/config/PAGE_OFFSET) \
+    $(wildcard include/config/KASAN) \
+    $(wildcard include/config/THUMB2_KERNEL) \
+    $(wildcard include/config/HIGHMEM) \
+    $(wildcard include/config/SMP) \
+    $(wildcard include/config/DRAM_BASE) \
+    $(wildcard include/config/DRAM_SIZE) \
+    $(wildcard include/config/XIP_KERNEL) \
+    $(wildcard include/config/HAVE_TCM) \
+    $(wildcard include/config/ARM_PATCH_PHYS_VIRT) \
+    $(wildcard include/config/PHYS_OFFSET) \
+    $(wildcard include/config/DEBUG_VIRTUAL) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/compiler.h \
     $(wildcard include/config/TRACE_BRANCH_PROFILING) \
     $(wildcard include/config/PROFILE_ALL_BRANCHES) \
@@ -63,100 +71,52 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kasan-checks.h \
     $(wildcard include/config/KASAN_GENERIC) \
     $(wildcard include/config/KASAN_SW_TAGS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/types.h \
+    $(wildcard include/config/HAVE_UID16) \
+    $(wildcard include/config/UID16) \
+    $(wildcard include/config/ARCH_DMA_ADDR_T_64BIT) \
+    $(wildcard include/config/PHYS_ADDR_T_64BIT) \
+    $(wildcard include/config/ARCH_32BIT_USTAT_F_TINODE) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/posix_types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stddef.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/stddef.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/uapi/asm/posix_types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/posix_types.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kcsan-checks.h \
     $(wildcard include/config/KCSAN) \
     $(wildcard include/config/KCSAN_WEAK_MEMORY) \
     $(wildcard include/config/KCSAN_IGNORE_ATOMICS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/poison.h \
-    $(wildcard include/config/ILLEGAL_POINTER_VALUE) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/const.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/vdso/const.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/const.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/barrier.h \
-    $(wildcard include/config/CPU_32v6K) \
-    $(wildcard include/config/THUMB2_KERNEL) \
-    $(wildcard include/config/CPU_XSC3) \
-    $(wildcard include/config/CPU_FA526) \
-    $(wildcard include/config/ARM_HEAVY_MB) \
-    $(wildcard include/config/ARM_DMA_MEM_BUFFERABLE) \
-    $(wildcard include/config/SMP) \
-    $(wildcard include/config/CPU_SPECTRE) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/barrier.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/sysfs.h \
-    $(wildcard include/config/DEBUG_LOCK_ALLOC) \
-    $(wildcard include/config/SYSFS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kernfs.h \
-    $(wildcard include/config/KERNFS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/err.h \
-  arch/arm/include/generated/uapi/asm/errno.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/errno.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/errno-base.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/mutex.h \
-    $(wildcard include/config/PREEMPT_RT) \
-    $(wildcard include/config/MUTEX_SPIN_ON_OWNER) \
-    $(wildcard include/config/DEBUG_MUTEXES) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/current.h \
-    $(wildcard include/config/CURRENT_POINTER_IN_TPIDRURO) \
-    $(wildcard include/config/CC_IS_CLANG) \
-    $(wildcard include/config/CLANG_VERSION) \
-    $(wildcard include/config/CPU_V6) \
-    $(wildcard include/config/ARM_HAS_GROUP_RELOCS) \
-    $(wildcard include/config/ARM_MODULE_PLTS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/insn.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/spinlock_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/spinlock_types_raw.h \
-    $(wildcard include/config/DEBUG_SPINLOCK) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/spinlock_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/lockdep_types.h \
-    $(wildcard include/config/PROVE_RAW_LOCK_NESTING) \
-    $(wildcard include/config/LOCKDEP) \
-    $(wildcard include/config/LOCK_STAT) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/rwlock_types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/lockdep.h \
-    $(wildcard include/config/PROVE_LOCKING) \
-    $(wildcard include/config/DEBUG_LOCKING_API_SELFTESTS) \
-    $(wildcard include/config/PREEMPT_COUNT) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/smp.h \
-    $(wildcard include/config/UP_LATE_INIT) \
-    $(wildcard include/config/DEBUG_PREEMPT) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/errno.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/errno.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/cpumask.h \
-    $(wildcard include/config/FORCE_NR_CPUS) \
-    $(wildcard include/config/HOTPLUG_CPU) \
-    $(wildcard include/config/DEBUG_PER_CPU_MAPS) \
-    $(wildcard include/config/CPUMASK_OFFSTACK) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kernel.h \
-    $(wildcard include/config/PREEMPT_VOLUNTARY_BUILD) \
-    $(wildcard include/config/PREEMPT_DYNAMIC) \
-    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_CALL) \
-    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_KEY) \
-    $(wildcard include/config/PREEMPT_) \
-    $(wildcard include/config/DEBUG_ATOMIC_SLEEP) \
-    $(wildcard include/config/MMU) \
-    $(wildcard include/config/TRACING) \
-    $(wildcard include/config/FTRACE_MCOUNT_RECORD) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stdarg.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/align.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/limits.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/limits.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/vdso/limits.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/linkage.h \
-    $(wildcard include/config/ARCH_USE_SYM_ANNOTATIONS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stringify.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/export.h \
-    $(wildcard include/config/MODVERSIONS) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/linkage.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/sizes.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/kasan_def.h \
+    $(wildcard include/config/KASAN_SHADOW_OFFSET) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/getorder.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/log2.h \
+    $(wildcard include/config/ARCH_HAS_ILOG2_U32) \
+    $(wildcard include/config/ARCH_HAS_ILOG2_U64) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/bitops.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/bits.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/vdso/bits.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/build_bug.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/typecheck.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/kernel.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/sysinfo.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/bitops/generic-non-atomic.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/barrier.h \
+    $(wildcard include/config/CPU_32v6K) \
+    $(wildcard include/config/CPU_FA526) \
+    $(wildcard include/config/ARM_HEAVY_MB) \
+    $(wildcard include/config/ARM_DMA_MEM_BUFFERABLE) \
+    $(wildcard include/config/CPU_SPECTRE) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/barrier.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/bitops.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/irqflags.h \
+    $(wildcard include/config/PROVE_LOCKING) \
     $(wildcard include/config/TRACE_IRQFLAGS) \
+    $(wildcard include/config/PREEMPT_RT) \
     $(wildcard include/config/IRQSOFF_TRACER) \
     $(wildcard include/config/PREEMPT_TRACER) \
     $(wildcard include/config/DEBUG_IRQFLAGS) \
@@ -172,7 +132,12 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/uapi/asm/hwcap.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/irqflags.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/percpu.h \
+    $(wildcard include/config/CPU_V6) \
+    $(wildcard include/config/ARM_HAS_GROUP_RELOCS) \
+    $(wildcard include/config/ARM_MODULE_PLTS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/insn.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/percpu.h \
+    $(wildcard include/config/DEBUG_PREEMPT) \
     $(wildcard include/config/HAVE_SETUP_PER_CPU_AREA) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/threads.h \
     $(wildcard include/config/NR_CPUS) \
@@ -196,7 +161,6 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/atomic.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/atomic.h \
     $(wildcard include/config/GENERIC_ATOMIC64) \
-    $(wildcard include/config/ARM_LPAE) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/prefetch.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/processor.h \
     $(wildcard include/config/HAVE_HW_BREAKPOINT) \
@@ -209,7 +173,6 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
     $(wildcard include/config/ARM_L1_CACHE_SHIFT) \
     $(wildcard include/config/AEABI) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/cmpxchg.h \
-    $(wildcard include/config/CPU_SA1100) \
     $(wildcard include/config/CPU_SA110) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/cmpxchg-local.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/atomic/atomic-arch-fallback.h \
@@ -229,11 +192,81 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/uapi/asm/swab.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/byteorder/generic.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/bitops/ext2-atomic-setbit.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/memory_model.h \
+    $(wildcard include/config/FLATMEM) \
+    $(wildcard include/config/SPARSEMEM_VMEMMAP) \
+    $(wildcard include/config/SPARSEMEM) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/pfn.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/device/class.h \
+    $(wildcard include/config/ACPI) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kobject.h \
+    $(wildcard include/config/UEVENT_HELPER) \
+    $(wildcard include/config/DEBUG_KOBJECT_RELEASE) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/list.h \
+    $(wildcard include/config/LIST_HARDENED) \
+    $(wildcard include/config/DEBUG_LIST) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/container_of.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/poison.h \
+    $(wildcard include/config/ILLEGAL_POINTER_VALUE) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/sysfs.h \
+    $(wildcard include/config/DEBUG_LOCK_ALLOC) \
+    $(wildcard include/config/SYSFS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kernfs.h \
+    $(wildcard include/config/KERNFS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/err.h \
+  arch/arm/include/generated/uapi/asm/errno.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/errno.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/asm-generic/errno-base.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/mutex.h \
+    $(wildcard include/config/MUTEX_SPIN_ON_OWNER) \
+    $(wildcard include/config/DEBUG_MUTEXES) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/current.h \
+    $(wildcard include/config/CURRENT_POINTER_IN_TPIDRURO) \
+    $(wildcard include/config/CC_IS_CLANG) \
+    $(wildcard include/config/CLANG_VERSION) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/spinlock_types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/spinlock_types_raw.h \
+    $(wildcard include/config/DEBUG_SPINLOCK) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/spinlock_types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/lockdep_types.h \
+    $(wildcard include/config/PROVE_RAW_LOCK_NESTING) \
+    $(wildcard include/config/LOCKDEP) \
+    $(wildcard include/config/LOCK_STAT) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/rwlock_types.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/lockdep.h \
+    $(wildcard include/config/DEBUG_LOCKING_API_SELFTESTS) \
+    $(wildcard include/config/PREEMPT_COUNT) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/smp.h \
+    $(wildcard include/config/UP_LATE_INIT) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/errno.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/errno.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/cpumask.h \
+    $(wildcard include/config/FORCE_NR_CPUS) \
+    $(wildcard include/config/HOTPLUG_CPU) \
+    $(wildcard include/config/DEBUG_PER_CPU_MAPS) \
+    $(wildcard include/config/CPUMASK_OFFSTACK) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kernel.h \
+    $(wildcard include/config/PREEMPT_VOLUNTARY_BUILD) \
+    $(wildcard include/config/PREEMPT_DYNAMIC) \
+    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_CALL) \
+    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_KEY) \
+    $(wildcard include/config/PREEMPT_) \
+    $(wildcard include/config/DEBUG_ATOMIC_SLEEP) \
+    $(wildcard include/config/TRACING) \
+    $(wildcard include/config/FTRACE_MCOUNT_RECORD) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stdarg.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/align.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/limits.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/limits.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/vdso/limits.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/linkage.h \
+    $(wildcard include/config/ARCH_USE_SYM_ANNOTATIONS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/stringify.h \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/export.h \
+    $(wildcard include/config/MODVERSIONS) \
+  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/linkage.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/hex.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/kstrtox.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/log2.h \
-    $(wildcard include/config/ARCH_HAS_ILOG2_U32) \
-    $(wildcard include/config/ARCH_HAS_ILOG2_U64) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/math.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/div64.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/compiler.h \
@@ -276,7 +309,6 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/overflow.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/string.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/string.h \
-    $(wildcard include/config/KASAN) \
     $(wildcard include/config/BCM2835_FAST_MEMCPY) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/bug.h \
     $(wildcard include/config/GENERIC_BUG) \
@@ -321,42 +353,10 @@ deps_/home/pi/Documents/440/lab_code/asgn1/asgn1_skel.o := \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/time.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/uapi/linux/time_types.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/thread_info.h \
-    $(wildcard include/config/VMAP_STACK) \
     $(wildcard include/config/ARM_THUMBEE) \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/fpstate.h \
     $(wildcard include/config/VFPv3) \
     $(wildcard include/config/IWMMXT) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/page.h \
-    $(wildcard include/config/CPU_COPY_V4WT) \
-    $(wildcard include/config/CPU_COPY_V4WB) \
-    $(wildcard include/config/CPU_COPY_FEROCEON) \
-    $(wildcard include/config/CPU_COPY_FA) \
-    $(wildcard include/config/CPU_XSCALE) \
-    $(wildcard include/config/CPU_COPY_V6) \
-    $(wildcard include/config/KUSER_HELPERS) \
-    $(wildcard include/config/HAVE_ARCH_PFN_VALID) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/glue.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/pgtable-2level-types.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/memory.h \
-    $(wildcard include/config/NEED_MACH_MEMORY_H) \
-    $(wildcard include/config/PAGE_OFFSET) \
-    $(wildcard include/config/HIGHMEM) \
-    $(wildcard include/config/DRAM_BASE) \
-    $(wildcard include/config/DRAM_SIZE) \
-    $(wildcard include/config/XIP_KERNEL) \
-    $(wildcard include/config/HAVE_TCM) \
-    $(wildcard include/config/ARM_PATCH_PHYS_VIRT) \
-    $(wildcard include/config/PHYS_OFFSET) \
-    $(wildcard include/config/DEBUG_VIRTUAL) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/sizes.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/kasan_def.h \
-    $(wildcard include/config/KASAN_SHADOW_OFFSET) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/getorder.h \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/asm-generic/memory_model.h \
-    $(wildcard include/config/FLATMEM) \
-    $(wildcard include/config/SPARSEMEM_VMEMMAP) \
-    $(wildcard include/config/SPARSEMEM) \
-  /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/pfn.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/traps.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/arch/arm/include/asm/smp.h \
   /usr/src/linux-headers-6.6.31+rpt-common-rpi/include/linux/osq_lock.h \

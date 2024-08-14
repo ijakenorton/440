@@ -1,4 +1,3 @@
-
 /**
  * File: asgn1.c
  * Date: 08/08/2024
@@ -22,7 +21,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include "asm/traps.h"
+#include "asm/page.h"
+/* #include "asm/traps.h" */
 #include "linux/atomic/atomic-instrumented.h"
 #include "linux/device/class.h"
 #include "linux/err.h"
@@ -195,16 +195,20 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 	size_t orig_f_pos = *f_pos; /* the original file position */
 	size_t size_written =
 		0; /* size written to virtual disk in this function */
-	size_t begin_offset; /* the offset from the beginning of a page to
+	size_t begin_offset =
+		*f_pos %
+		PAGE_SIZE; /* the offset from the beginning of a page to
 			       start writing */
 	int begin_page_no = *f_pos / PAGE_SIZE; /* the first page this finction
 					      should start writing to */
 
 	int curr_page_no; /* the current page number */
-	size_t curr_size_written; /* size written to virtual disk in this round */
+	size_t curr_size_written =
+		0; /* size written to virtual disk in this round */
 	size_t size_to_be_written; /* size to be read in the current round in 
 				 while loop */
 
+	size_t size_not_written;
 	struct list_head *ptr;
 	page_node *curr;
 
@@ -224,13 +228,26 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		curr->page = alloc_page(GFP_KERNEL);
 		list_add(&curr->list, &asgn1_device.mem_list);
 		asgn1_device.num_pages++;
-		ptr = &curr->list;
+		/* ptr = &curr->list; */
 	} else {
-		/* curr = list_last_entry(&asgn1_device.mem_list, page_node, list); */
-		ptr = &list_last_entry(&asgn1_device.mem_list, page_node, list)
-			       ->list;
+		curr = list_last_entry(&asgn1_device.mem_list, page_node, list);
+		/* ptr = &list_last_entry(&asgn1_device.mem_list, page_node, list) */
+		/* 	       ->list; */
 	}
 
+	while (size_written < count) {
+		size_to_be_written =
+			min((count - size_written), PAGE_SIZE - begin_offset);
+		size_not_written =
+			copy_from_user(page_address(curr->page) + begin_offset,
+				       buf, size_to_be_written);
+		if (size_not_written != 0) {
+			return size_written;
+		}
+		size_written += size_to_be_written;
+		*f_pos += size_to_be_written;
+		begin_offset = *f_pos % PAGE_SIZE;
+	}
 	/* for (curr_page_no = 0; curr_page_no < begin_page_no; curr_page_no++) { */
 	/* 	if (list_is_last(ptr, &asgn1_device.mem_list)) { */
 	/* 		curr = kmalloc(sizeof(page_node), GFP_KERNEL); */
@@ -240,8 +257,6 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 	/* 	ptr = ptr->next; */
 	/* } */
 
-	for (int k = 0; k < 5; k++) {
-	}
 	asgn1_device.data_size =
 		max(asgn1_device.data_size, orig_f_pos + size_written);
 	return size_written;
