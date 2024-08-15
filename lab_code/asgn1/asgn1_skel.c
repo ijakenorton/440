@@ -322,7 +322,7 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		printk(KERN_INFO "Creating first page");
 		curr = kmalloc(sizeof(page_node), GFP_KERNEL);
 		curr->page = alloc_page(GFP_KERNEL);
-		list_add(&curr->list, &asgn1_device.mem_list);
+		list_add_tail(&curr->list, &asgn1_device.mem_list);
 		asgn1_device.num_pages++;
 		/* ptr = &curr->list; */
 	} else {
@@ -332,6 +332,7 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 	}
 
 	while (size_written < count) {
+		printk(KERN_WARNING "%d", begin_offset);
 		// There is still size to be written
 		// We not at the start of the device
 		// We need to start writing at the start of next page
@@ -340,9 +341,11 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 				printk(KERN_INFO "Creating page");
 				curr = kmalloc(sizeof(page_node), GFP_KERNEL);
 				curr->page = alloc_page(GFP_KERNEL);
-				list_add(&curr->list, &asgn1_device.mem_list);
+				list_add_tail(&curr->list,
+					      &asgn1_device.mem_list);
 				asgn1_device.num_pages++;
 			} else {
+				printk(KERN_INFO "moving pointer");
 				curr = list_entry(curr->list.next, page_node,
 						  list);
 			}
@@ -360,13 +363,14 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		printk(KERN_WARNING "current f_pos %lld", *f_pos);
 		begin_offset = *f_pos % PAGE_SIZE;
 	}
-	printk(KERN_WARNING "Successful wrote %d bytes\n", size_written);
 	printk(KERN_WARNING "Using %d pages\n", asgn1_device.num_pages);
 
 	asgn1_device.data_size =
 		max(asgn1_device.data_size, orig_f_pos + size_written);
 	printk(KERN_WARNING "Data size is %d bytes\n", asgn1_device.data_size);
 	printk(KERN_WARNING "current f_pos at end %lld", *f_pos);
+	printk(KERN_WARNING "Successful wrote %d bytes\n", size_written);
+	printk(KERN_WARNING "FINISHED THE WRITE");
 	return size_written;
 }
 
