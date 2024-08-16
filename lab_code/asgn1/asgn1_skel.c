@@ -168,10 +168,11 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 	page_node *curr;
 
 	for (curr_page_no = 0; curr_page_no < begin_page_no; curr_page_no++) {
-		if (ptr->next == NULL) {
-			printk(KERN_WARNING "The next pointer is null");
-			return -EFAULT;
-		}
+		ptr = ptr->next;
+		/* if (list_is_last(ptr, &asgn1_device.mem_list)) { */
+		/* 	printk(KERN_WARNING "The next pointer is null"); */
+		/* 	return -EFAULT; */
+		/* } */
 	}
 
 	printk(KERN_WARNING "moved to page");
@@ -180,7 +181,7 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 		return -EFAULT;
 	}
 	curr = list_entry(ptr, page_node, list);
-	size_t size_not_read;
+	unsigned long size_not_read;
 
 	while (size_read < count) {
 		printk(KERN_WARNING "start of while loop");
@@ -202,24 +203,30 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 		/* size_ */
 		size_not_read = copy_to_user(buf, page_address(curr->page),
 					     size_to_be_read);
+
 		if (size_not_read != 0) {
+			printk(KERN_INFO "size_not_read %lu exiting...",
+			       size_not_read);
 			return size_read;
 		}
-		if (1) {
-			printk(KERN_INFO "First read");
-			return size_read;
-		}
-		/* size_read += size_to_be_read; */
-		/* *f_pos += size_to_be_read; */
-		/* begin_offset = *f_pos % PAGE_SIZE; */
-		/* if (size_read < count) { */
-		/* 	if (curr->list.next == NULL) { */
-		/* 		printk(KERN_WARNING */
-		/* 		       "The curr->list.next is null"); */
-		/* 		return -EFAULT; */
-		/* 	} */
-		/* 	curr = list_entry(curr->list.next, page_node, list); */
+		/* if (1) { */
+		/* 	printk(KERN_INFO "First read"); */
+		/* 	return size_read; */
 		/* } */
+		size_read += size_to_be_read;
+		*f_pos += size_to_be_read;
+		/* begin_offset = *f_pos % PAGE_SIZE; */
+		if (size_read < count) {
+			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
+				printk(KERN_INFO "size_not_read %lu exiting...",
+				       size_not_read);
+				printk(KERN_INFO
+				       "list is last size_read %d exiting...",
+				       size_read);
+				return size_read;
+			}
+			curr = list_entry(curr->list.next, page_node, list);
+		}
 	}
 	/* COMPLETE ME */
 	/**
@@ -237,6 +244,7 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
    * if end of data area of ramdisk reached before copying the requested
    *   return the size copied to the user space so far
    */
+	printk(KERN_WARNING "Finished read successfully");
 
 	return size_read;
 }
@@ -282,19 +290,26 @@ static loff_t asgn1_lseek(struct file *file, loff_t offset, int cmd)
 ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		    loff_t *f_pos)
 {
-	printk(KERN_WARNING "Starting write");
+	printk(KERN_INFO "Starting write");
 	if (count <= 0) {
 		return 0;
 	}
+	/* Shouldn't be possible? */
+	if (*f_pos > asgn1_device.data_size) {
+		printk(KERN_WARNING
+		       "Starting f_pos .%lld is more than data_size, stopping write..",
+		       *f_pos);
+		return -EINVAL;
+	}
 	size_t orig_f_pos = *f_pos; /* the original file position */
-	printk(KERN_WARNING "Starting f_pos %lld", *f_pos);
+	printk(KERN_INFO "Starting f_pos %lld", *f_pos);
 	size_t size_written =
 		0; /* size written to virtual disk in this function */
 	size_t begin_offset =
 		*f_pos %
 		PAGE_SIZE; /* the offset from the beginning of a page to
 			       start writing */
-	int begin_page_no = *f_pos / PAGE_SIZE; /* the first page this finction
+	int begin_page_no = *f_pos / PAGE_SIZE; /* the first page this function
 					      should start writing to */
 
 	int curr_page_no; /* the current page number */
@@ -304,33 +319,34 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 				 while loop */
 
 	size_t size_not_written;
-	struct list_head *ptr;
 	page_node *curr;
 
 	/* COMPLETE ME */
-	/**
-   * Traverse the list until the first page reached, and add nodes if necessary
-   *
-   * Then write the data page by page, remember to handle the situation
-   *   when copy_from_user() writes less than the amount you requested.
-   *       If copy_from_user returns non-zero
-   *       the data is not completely copied. In case partial data
-   *       is copied, return the number of bytes copied. Otherwise,
-   *       return -EINVAL for invalid user buffer.
-   */
+	//Traverse the list until the first page reached, and add nodes if necessary
+
 	if (list_empty(&asgn1_device.mem_list)) {
 		printk(KERN_INFO "Creating first page");
 		curr = kmalloc(sizeof(page_node), GFP_KERNEL);
 		curr->page = alloc_page(GFP_KERNEL);
 		list_add_tail(&curr->list, &asgn1_device.mem_list);
 		asgn1_device.num_pages++;
-		/* ptr = &curr->list; */
 	} else {
-		curr = list_last_entry(&asgn1_device.mem_list, page_node, list);
-		/* ptr = &list_last_entry(&asgn1_device.mem_list, page_node, list) */
-		/* 	       ->list; */
+		curr = list_first_entry(&asgn1_device.mem_list, page_node,
+					list);
+		for (curr_page_no = 1; curr_page_no < begin_page_no;
+		     curr_page_no++) {
+			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
+				break;
+			}
+			curr = list_entry(curr->list.next, page_node, list);
+		}
 	}
-
+	/* Then write the data page by page, remember to handle the situation */
+	/*   when copy_from_user() writes less than the amount you requested. */
+	/*       If copy_from_user returns non-zero */
+	/*       the data is not completely copied. In case partial data */
+	/*       is copied, return the number of bytes copied. Otherwise, */
+	/*       return -EINVAL for invalid user buffer. */
 	while (size_written < count) {
 		printk(KERN_WARNING "%d", begin_offset);
 		// There is still size to be written
@@ -345,7 +361,8 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 					      &asgn1_device.mem_list);
 				asgn1_device.num_pages++;
 			} else {
-				printk(KERN_INFO "moving pointer");
+				printk(KERN_INFO
+				       "moving pointer to next element");
 				curr = list_entry(curr->list.next, page_node,
 						  list);
 			}
@@ -360,17 +377,17 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		}
 		size_written += size_to_be_written;
 		*f_pos += size_to_be_written;
-		printk(KERN_WARNING "current f_pos %lld", *f_pos);
+		printk(KERN_INFO "current f_pos %lld", *f_pos);
 		begin_offset = *f_pos % PAGE_SIZE;
 	}
-	printk(KERN_WARNING "Using %d pages\n", asgn1_device.num_pages);
+	printk(KERN_INFO "Using %d pages\n", asgn1_device.num_pages);
 
 	asgn1_device.data_size =
 		max(asgn1_device.data_size, orig_f_pos + size_written);
-	printk(KERN_WARNING "Data size is %d bytes\n", asgn1_device.data_size);
-	printk(KERN_WARNING "current f_pos at end %lld", *f_pos);
-	printk(KERN_WARNING "Successful wrote %d bytes\n", size_written);
-	printk(KERN_WARNING "FINISHED THE WRITE");
+	printk(KERN_INFO "Data size is %d bytes\n", asgn1_device.data_size);
+	printk(KERN_INFO "current f_pos at end %lld", *f_pos);
+	printk(KERN_INFO "Successful wrote %d bytes\n", size_written);
+	printk(KERN_INFO "FINISHED THE WRITE");
 	return size_written;
 }
 
