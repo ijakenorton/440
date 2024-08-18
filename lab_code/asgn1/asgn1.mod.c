@@ -38,11 +38,14 @@ __used __section("__versions") = {
 	{ 0xe3ec2f2b, "alloc_chrdev_region" },
 	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
 	{ 0x70dd78f1, "class_destroy" },
+	{ 0x372ddcc1, "kmem_cache_create" },
 	{ 0x92997ed8, "_printk" },
 	{ 0x92a1ef16, "__free_pages" },
+	{ 0xc5ca225b, "kmem_cache_alloc" },
 	{ 0x89b05fd3, "cdev_add" },
 	{ 0xa76c78c8, "device_create" },
 	{ 0x58cffff9, "class_create" },
+	{ 0xae2ca04d, "kmem_cache_free" },
 	{ 0x5f754e5a, "memset" },
 	{ 0x48c78dde, "__alloc_pages" },
 	{ 0x51a910c0, "arm_copy_to_user" },
@@ -51,15 +54,14 @@ __used __section("__versions") = {
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 	{ 0x987c11c7, "__pv_phys_pfn_offset" },
 	{ 0x76646418, "device_destroy" },
-	{ 0xbddad34d, "kmalloc_trace" },
 	{ 0xab528595, "mem_map" },
 	{ 0x8e1ca6d9, "cdev_init" },
-	{ 0xbcc79e67, "kmalloc_caches" },
 	{ 0x34bebc18, "cdev_del" },
+	{ 0x56888907, "kmem_cache_destroy" },
 	{ 0xa6f3f0f1, "module_layout" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "96B7B8C6DD87F4DB885B932");
+MODULE_INFO(srcversion, "577F82E8B8848C170D9B83F");
