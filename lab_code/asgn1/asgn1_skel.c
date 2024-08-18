@@ -43,6 +43,7 @@
 
 #define MYDEV_NAME "asgn1"
 #define MYIOC_TYPE 'k'
+#define CACHE_SIZE (PAGE_SIZE * 10)
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jake Norton");
@@ -65,6 +66,7 @@ typedef struct asgn1_dev_t {
 	atomic_t nprocs; /* number of processes accessing this device */
 	atomic_t max_nprocs; /* max number of processes accessing this device */
 	struct kmem_cache *cache; /* cache memory */
+	int cache_size;
 	struct class *class; /* the udev class */
 	struct device *device; /* the udev device node */
 } asgn1_dev;
@@ -86,8 +88,12 @@ void free_memory_pages(void)
 		if (curr->page) {
 			__free_page(curr->page);
 		}
+
+		kmem_cache_free(asgn1_device.cache, curr);
 		list_del(&curr->list);
 	}
+
+	kmem_cache_destroy(asgn1_device.cache);
 	asgn1_device.data_size = 0;
 	asgn1_device.num_pages = 0;
 	/* COMPLETE ME */
@@ -141,17 +147,19 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 {
 	printk(KERN_INFO "Starting read with f_pos %lld", *f_pos);
 	printk(KERN_INFO "Starting read with original count %d", count);
-	if (*f_pos > asgn1_device.data_size) {
+	if (*f_pos >= asgn1_device.data_size) {
 		return 0;
 	}
 
 	size_t size_read = 0;
 	/* size read from virtual disk in this function */ /* the offset from the beginning of a page to start writing */
-	size_t begin_offset = *f_pos % PAGE_SIZE;
+	size_t begin_offset = (size_t)*f_pos % PAGE_SIZE;
 	int begin_page_no = *f_pos / PAGE_SIZE; /* the first page which contains
 					     the requested data */
-	count = min(count, asgn1_device.data_size - begin_offset);
+	/* count = min(count, asgn1_device.data_size - begin_offset); */
+	count = min(count, asgn1_device.data_size);
 
+	printk(KERN_INFO "STARTING OFFSET %d", begin_offset);
 	printk(KERN_INFO "Min of count %d", count);
 	int curr_page_no; /* the current page number */
 	size_t curr_size_read; /* size read from the virtual disk in this round */
@@ -169,10 +177,6 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 
 	for (curr_page_no = 0; curr_page_no < begin_page_no; curr_page_no++) {
 		ptr = ptr->next;
-		/* if (list_is_last(ptr, &asgn1_device.mem_list)) { */
-		/* 	printk(KERN_WARNING "The next pointer is null"); */
-		/* 	return -EFAULT; */
-		/* } */
 	}
 
 	printk(KERN_WARNING "moved to page");
@@ -184,9 +188,9 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 	unsigned long size_not_read;
 
 	while (size_read < count) {
-		printk(KERN_WARNING "start of while loop");
-		size_to_be_read =
-			min((count - size_read), PAGE_SIZE - begin_offset);
+		printk(KERN_INFO "start of while loop");
+		size_to_be_read = min((count - size_read),
+				      PAGE_SIZE - (size_t)begin_offset);
 		if (curr == NULL) {
 			printk(KERN_WARNING "The curr is NULL");
 			return -EFAULT;
@@ -205,16 +209,17 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 					     size_to_be_read);
 
 		if (size_not_read != 0) {
-			printk(KERN_INFO "size_not_read %lu exiting...",
-			       size_not_read);
-			return size_read;
+			if (size_read > 0) {
+				printk(KERN_WARNING
+				       "size_not_read %lu exiting...",
+				       size_not_read);
+				return size_not_read;
+			}
+			return -EINVAL;
 		}
-		/* if (1) { */
-		/* 	printk(KERN_INFO "First read"); */
-		/* 	return size_read; */
-		/* } */
 		size_read += size_to_be_read;
 		*f_pos += size_to_be_read;
+		buf += size_to_be_read;
 		/* begin_offset = *f_pos % PAGE_SIZE; */
 		if (size_read < count) {
 			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
@@ -244,7 +249,8 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
    * if end of data area of ramdisk reached before copying the requested
    *   return the size copied to the user space so far
    */
-	printk(KERN_WARNING "Finished read successfully");
+	printk(KERN_INFO "Finished read successfully after reading %d",
+	       size_read);
 
 	return size_read;
 }
@@ -326,7 +332,7 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 
 	if (list_empty(&asgn1_device.mem_list)) {
 		printk(KERN_INFO "Creating first page");
-		curr = kmalloc(sizeof(page_node), GFP_KERNEL);
+		curr = kmem_cache_alloc(asgn1_device.cache, GFP_KERNEL);
 		curr->page = alloc_page(GFP_KERNEL);
 		list_add_tail(&curr->list, &asgn1_device.mem_list);
 		asgn1_device.num_pages++;
@@ -355,7 +361,8 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		if (*f_pos != 0 && begin_offset == 0) {
 			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
 				printk(KERN_INFO "Creating page");
-				curr = kmalloc(sizeof(page_node), GFP_KERNEL);
+				curr = kmem_cache_alloc(asgn1_device.cache,
+							GFP_KERNEL);
 				curr->page = alloc_page(GFP_KERNEL);
 				list_add_tail(&curr->list,
 					      &asgn1_device.mem_list);
@@ -373,10 +380,17 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 			copy_from_user(page_address(curr->page) + begin_offset,
 				       buf, size_to_be_written);
 		if (size_not_written != 0) {
-			return size_written;
+			if (size_written > 0) {
+				printk(KERN_INFO
+				       "size_not_written %d exiting...",
+				       size_not_written);
+				return size_not_written;
+			}
+			return -EINVAL;
 		}
 		size_written += size_to_be_written;
 		*f_pos += size_to_be_written;
+		buf += size_to_be_written;
 		printk(KERN_INFO "current f_pos %lld", *f_pos);
 		begin_offset = *f_pos % PAGE_SIZE;
 	}
@@ -402,7 +416,13 @@ long asgn1_ioctl(struct file *filp, unsigned cmd, unsigned long arg)
 	int nr;
 	int new_nprocs;
 	int result;
-
+	if (_IOC_TYPE(cmd) != MYIOC_TYPE)
+		return -EINVAL;
+	//TODO check validity of arg
+	if (cmd == SET_NPROC_OP) {
+		atomic_set(&asgn1_device.max_nprocs, (int)arg);
+		return 0;
+	}
 	/* COMPLETE ME */
 	/** 
    * check whether cmd is for our device, if not for us, return -EINVAL 
@@ -556,7 +576,20 @@ int __init asgn1_init_module(void)
 	asgn1_device.num_pages = 0;
 	atomic_set(&asgn1_device.nprocs, 0);
 	atomic_set(&asgn1_device.max_nprocs, 5);
+	asgn1_device.cache_size = CACHE_SIZE;
 
+	if (!(asgn1_device.cache =
+		      kmem_cache_create("cache", asgn1_device.cache_size, 0,
+					SLAB_HWCACHE_ALIGN, NULL))) {
+		printk(KERN_ERR "kmem_cache_create failed\n");
+		cdev_del(&asgn1_device.cdev);
+		device_destroy(asgn1_device.class, asgn1_device.dev);
+		class_destroy(asgn1_device.class);
+		unregister_chrdev_region(asgn1_device.dev, 1);
+		return -ENOMEM;
+	}
+
+	printk(KERN_INFO "successfully created cache");
 	return 0;
 
 	/* cleanup code called when any of the initialization steps fail */
