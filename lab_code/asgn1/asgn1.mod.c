@@ -36,8 +36,12 @@ MODULE_INFO(retpoline, "Y");
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0xe3ec2f2b, "alloc_chrdev_region" },
+	{ 0x4b49c976, "proc_create" },
+	{ 0x4bce4a10, "seq_release" },
 	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
 	{ 0x70dd78f1, "class_destroy" },
+	{ 0x287e81b0, "remap_pfn_range" },
+	{ 0xa63c3d95, "seq_lseek" },
 	{ 0x372ddcc1, "kmem_cache_create" },
 	{ 0x92997ed8, "_printk" },
 	{ 0x92a1ef16, "__free_pages" },
@@ -49,11 +53,15 @@ __used __section("__versions") = {
 	{ 0x5f754e5a, "memset" },
 	{ 0x48c78dde, "__alloc_pages" },
 	{ 0x51a910c0, "arm_copy_to_user" },
+	{ 0xc11cdbdd, "seq_read" },
 	{ 0x6091b333, "unregister_chrdev_region" },
 	{ 0xae353d77, "arm_copy_from_user" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 	{ 0x987c11c7, "__pv_phys_pfn_offset" },
 	{ 0x76646418, "device_destroy" },
+	{ 0xddade1ae, "remove_proc_entry" },
+	{ 0xf0648648, "seq_printf" },
+	{ 0x5b242f5, "seq_open" },
 	{ 0xab528595, "mem_map" },
 	{ 0x8e1ca6d9, "cdev_init" },
 	{ 0x34bebc18, "cdev_del" },
@@ -64,4 +72,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "577F82E8B8848C170D9B83F");
+MODULE_INFO(srcversion, "121D8F9A19EFD098CC16ED1");
