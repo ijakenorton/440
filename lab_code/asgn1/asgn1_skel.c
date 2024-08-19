@@ -47,7 +47,6 @@
 #define MY_PROC_NAME "asgn1_proc"
 #define MYIOC_TYPE 'k'
 #define CACHE_SIZE (PAGE_SIZE * 10)
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jake Norton");
 MODULE_DESCRIPTION("COSC440 asgn1");
@@ -410,9 +409,11 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 }
 
 #define SET_NPROC_OP 1
+#define SET_MMAP_OP 2
+#define MMAP_DEV_CMD_GET_BUFSIZE _IOW(MYIOC_TYPE, SET_MMAP_OP, int)
 #define TEM_SET_NPROC _IOW(MYIOC_TYPE, SET_NPROC_OP, int)
-
 /**
+ *
  * The ioctl function, which nothing needs to be done in this case.
  */
 long asgn1_ioctl(struct file *filp, unsigned cmd, unsigned long arg)
@@ -426,7 +427,8 @@ long asgn1_ioctl(struct file *filp, unsigned cmd, unsigned long arg)
 	/*  get command, and if command is SET_NPROC_OP, then get the data, and */
 	/*  set max_nprocs accordingly, don't forget to check validity of the */
 	/*  value before setting max_nprocs */
-	if (cmd == SET_NPROC_OP) {
+	switch (cmd) {
+	case TEM_SET_NPROC:
 		if (!access_ok((void __user *)arg,
 			       sizeof(asgn1_device.max_nprocs)))
 			return -EINVAL;
@@ -436,8 +438,15 @@ long asgn1_ioctl(struct file *filp, unsigned cmd, unsigned long arg)
 		}
 		atomic_set(&asgn1_device.max_nprocs, new_max_nprocs);
 		return 0;
+	case MMAP_DEV_CMD_GET_BUFSIZE:
+		if (!access_ok((void __user *)arg,
+			       sizeof(asgn1_device.data_size)))
+			return -EINVAL;
+		if (put_user(asgn1_device.data_size, (size_t __user *)arg)) {
+			return -EFAULT;
+		}
+		return 0;
 	}
-
 	return -ENOTTY;
 }
 

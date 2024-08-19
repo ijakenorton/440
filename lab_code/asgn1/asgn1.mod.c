@@ -44,6 +44,7 @@ __used __section("__versions") = {
 	{ 0xa63c3d95, "seq_lseek" },
 	{ 0x372ddcc1, "kmem_cache_create" },
 	{ 0x92997ed8, "_printk" },
+	{ 0xbc10dd97, "__put_user_4" },
 	{ 0x92a1ef16, "__free_pages" },
 	{ 0xc5ca225b, "kmem_cache_alloc" },
 	{ 0x89b05fd3, "cdev_add" },
@@ -58,6 +59,7 @@ __used __section("__versions") = {
 	{ 0xae353d77, "arm_copy_from_user" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 	{ 0x987c11c7, "__pv_phys_pfn_offset" },
+	{ 0x353e3fa5, "__get_user_4" },
 	{ 0x76646418, "device_destroy" },
 	{ 0xddade1ae, "remove_proc_entry" },
 	{ 0xf0648648, "seq_printf" },
@@ -72,4 +74,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "121D8F9A19EFD098CC16ED1");
+MODULE_INFO(srcversion, "64D9EE64F543371A46DBB73");

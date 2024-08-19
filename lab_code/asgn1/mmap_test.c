@@ -13,7 +13,8 @@
 #define MYIOC_TYPE 'k'
 #define SET_NPROC_OP 1
 #define ASGN1_SET_NPROC _IOW(MYIOC_TYPE, SET_NPROC_OP, int)
-
+#define SET_MMAP_OP 2
+#define MMAP_DEV_CMD_GET_BUFSIZE _IOW(MYIOC_TYPE, SET_MMAP_OP, int)
 ssize_t my_fread(int fildes, void *buf, size_t nbyte)
 {
 	ssize_t read_size;
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
 	int fd;
 	char *buf, *read_buf, *mmap_buf, *filename = "/dev/asgn1";
 	int nproc = 12345;
+	size_t buf_size;
 
 	srandom(getpid());
 
@@ -97,6 +99,12 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	if (ioctl(fd, MMAP_DEV_CMD_GET_BUFSIZE, &buf_size) < 0) {
+		fprintf(stderr, "ioctl bufsize failed:  %s\n", strerror(errno));
+		exit(1);
+	}
+
+	printf("buf_size is %d\n", buf_size);
 	assert((buf = malloc(SIZE)));
 
 	for (i = 0; i < SIZE; i++) {
@@ -108,13 +116,19 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	if (ioctl(fd, MMAP_DEV_CMD_GET_BUFSIZE, &buf_size) < 0) {
+		fprintf(stderr, "ioctl bufsize failed:  %s\n", strerror(errno));
+		exit(1);
+	}
+
+	printf("buf_size is %d\n", buf_size);
 #if 0
-    /* have the driver tell us the buffer size */
-    if (ioctl (fd, MMAP_DEV_CMD_GET_BUFSIZE, &len) < 0) {
-        fprintf (stderr, "ioctl failed:  %s\n", strerror (errno));
-        exit (1);
-    }
-    printf ("driver's ioctl says buffer size is %ld\n", len);
+	/* have the driver tell us the buffer size */
+	if (ioctl(fd, MMAP_DEV_CMD_GET_BUFSIZE, &len) < 0) {
+		fprintf(stderr, "ioctl failed:  %s\n", strerror(errno));
+		exit(1);
+	}
+	printf("driver's ioctl says buffer size is %ld\n", len);
 #endif
 
 	assert((read_buf = malloc(SIZE)));
@@ -149,5 +163,10 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	printf("nproc set to %d\n", nproc);
+	if (ioctl(fd, MMAP_DEV_CMD_GET_BUFSIZE, &buf_size) < 0) {
+		fprintf(stderr, "ioctl bufsize failed:  %s\n", strerror(errno));
+		exit(1);
+	}
+	printf("buf_size set to %d\n", buf_size);
 	return 0;
 }
