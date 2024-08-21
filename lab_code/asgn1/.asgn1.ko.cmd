@@ -1,1 +1,0 @@
-savedcmd_/home/pi/Documents/440/lab_code/asgn1/asgn1.ko := ld -r -EL -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm/module.lds -o /home/pi/Documents/440/lab_code/asgn1/asgn1.ko /home/pi/Documents/440/lab_code/asgn1/asgn1.o /home/pi/Documents/440/lab_code/asgn1/asgn1.mod.o;  true

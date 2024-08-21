@@ -164,6 +164,12 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 	unsigned long size_not_read;
 
 	while (size_read < count) {
+		if (!curr) {
+			return size_read;
+		}
+		if (!curr->page) {
+			return size_read;
+		}
 		size_to_be_read = min((count - size_read),
 				      PAGE_SIZE - (size_t)begin_offset);
 
@@ -183,6 +189,7 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 		size_read += size_to_be_read;
 		*f_pos += size_to_be_read;
 		buf += size_to_be_read;
+		begin_offset = 0;
 		if (size_read < count) {
 			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
 				pr_info("size_not_read %lu exiting...",
@@ -192,7 +199,6 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 				return size_read;
 			}
 			curr = list_entry(curr->list.next, page_node, list);
-			begin_offset = 0;
 		}
 	}
 
@@ -279,7 +285,7 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		// find the starting page
 		curr = list_first_entry(&asgn1_device.mem_list, page_node,
 					list);
-		for (curr_page_no = 1; curr_page_no < begin_page_no;
+		for (curr_page_no = 0; curr_page_no < begin_page_no;
 		     curr_page_no++) {
 			if (list_is_last(&curr->list, &asgn1_device.mem_list)) {
 				break;
