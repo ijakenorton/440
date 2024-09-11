@@ -41,6 +41,8 @@
  *
  @*/
 
+/* #include "linux/atomic/atomic-instrumented.h" */
+#include "linux/printk.h"
 #include <linux/module.h>
 #include <linux/interrupt.h>
 
@@ -66,6 +68,11 @@ static void t_fun(unsigned long t_arg)
 
 static DECLARE_TASKLET_OLD(t_name, t_fun);
 
+/* struct tasklet_struct t_name = { */
+/* 	.count = ATOMIC_INIT(0), */
+/* 	.func = t_fun, */
+/* } */
+
 static ssize_t mycdrv_write(struct file *file, const char __user *buf,
 			    size_t lbuf, loff_t *ppos)
 {
@@ -74,10 +81,13 @@ static ssize_t mycdrv_write(struct file *file, const char __user *buf,
 	printk(KERN_INFO "about to schedule tasklet, jiffies=%ld\n", jiffies);
 
 	/* COMPLETE ME */
-	/* schedule the tasklet here */
 	/* END TRIM */
+	/* int count = atomic_read(&t_name.count); */
+	/* pr_info("Count = %d", count); */
 
 	printk(KERN_INFO " i queued the task, jiffies=%ld\n", jiffies);
+	t_name.data = (unsigned long)&t_data;
+	tasklet_schedule(&t_name);
 	t_data.len += 100;
 	return lbuf;
 }

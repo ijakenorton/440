@@ -175,8 +175,8 @@ ssize_t asgn1_read(struct file *filp, char __user *buf, size_t count,
 
 		void *current_address = page_address(curr->page);
 		current_address += begin_offset;
-		size_not_read = copy_to_user(buf, page_address(curr->page),
-					     size_to_be_read);
+		size_not_read =
+			copy_to_user(buf, current_address, size_to_be_read);
 
 		if (size_not_read != 0) {
 			if (size_read > 0) {
@@ -334,7 +334,9 @@ ssize_t asgn1_write(struct file *filp, const char __user *buf, size_t count,
 		if (size_not_written != 0) {
 			pr_warn("size_not_written %zu exiting...",
 				size_not_written);
-			return size_written > 0 ? size_written : -EFAULT;
+			return size_written > 0 ?
+				       size_written - size_not_written :
+				       -EFAULT;
 		}
 		size_written += size_to_be_written;
 		*f_pos += size_to_be_written;

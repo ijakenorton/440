@@ -78,7 +78,7 @@ void read_and_compare(int fd, char *read_buf, char *mmap_buf, unsigned long len)
 	}
 }
 
-#define SIZE 1024 * 64
+#define SIZE 1024 * 999999
 
 int main(int argc, char **argv)
 {

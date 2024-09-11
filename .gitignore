@@ -1,0 +1,8 @@
+*.cmd*
+*.mod*
+*.o
+*.ko
+*.json
+.cache
+*.symvers
+

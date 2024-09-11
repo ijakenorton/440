@@ -41,6 +41,7 @@
  *
  @*/
 
+#include "linux/types.h"
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/workqueue.h>
@@ -65,6 +66,7 @@ static void w_fun(struct work_struct *w_arg)
 	printk(KERN_INFO " my data is: %d\n", atomic_read(&data->len));
 }
 
+DECLARE_WORK(work_q, w_fun);
 static ssize_t mycdrv_write(struct file *file, const char __user *buf,
 			    size_t lbuf, loff_t *ppos)
 {
@@ -74,9 +76,8 @@ static ssize_t mycdrv_write(struct file *file, const char __user *buf,
 	printk(KERN_INFO "about to schedule workqueue,  jiffies=%ld\n",
 	       jiffies);
 
-	/* COMPLETE ME */
-	/* schedule the workqueue entry here */
-	/* END TRIM */
+	atomic_t dat = ATOMIC_INIT((unsigned long)&my_data);
+	work_q.data = dat;
 
 	printk(KERN_INFO " i queued the task, jiffies=%ld\n", jiffies);
 	atomic_add(100, &data->len);
@@ -95,10 +96,6 @@ static int __init my_init(void)
 {
 	struct my_dat *data = (struct my_dat *)&my_data;
 	atomic_set(&data->len, 100);
-
-	/* COMPLETE ME */
-	/* initialize the workqueue here */
-	/* END TRIM */
 
 	return my_generic_init();
 }
