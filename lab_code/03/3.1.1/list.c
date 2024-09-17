@@ -49,6 +49,12 @@ typedef struct {
 	int val;
 } my_entry;
 
+typedef struct {
+	struct list_head head;
+	void *read;
+	void *write;
+} d_list_t;
+
 static int __init my_init(void)
 {
 	if (!(my_cache = kmem_cache_create("mycache", size, 0,
